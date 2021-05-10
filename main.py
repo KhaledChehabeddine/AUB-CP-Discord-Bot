@@ -61,7 +61,7 @@ async def my_background_task():
       user = User(id = k, handle = v, client = client)
       rank = cf_api.user_rank(user)
       if await user.has_role(rank): continue
-      lst = await user.get_lower_roles(rank)
+      lst = await user.get_different_roles(rank)
       for r in lst:
         await user.remove_role(r)
       await user.add_role(rank)

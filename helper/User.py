@@ -88,13 +88,13 @@ class User:
         role = discord.utils.get(member.guild.roles, name = _role)
         await member.remove_roles(role)
 
-    async def get_lower_roles(self, role):
+    async def get_different_roles(self, role):
         roles = await self.get_roles()
         x = cf_ranking.get(role)
         lst = []
        
         for r in roles:
-          if r.name in cf_ranking.keys() and cf_ranking.get(r.name) < x:
+          if r.name in cf_ranking.keys() and cf_ranking.get(r.name) != x:
             lst.append(r.name)
 
         return lst
