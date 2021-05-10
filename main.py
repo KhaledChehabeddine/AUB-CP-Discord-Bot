@@ -8,13 +8,14 @@ prefix = config['prefix']
 av_cmds = dict()
 
 def init():
-  try:
-    for (r, d, f) in os.walk(config['cmds_loc']):
-      for item in f:
-        if item[-3:] != '.py': continue
-        av_cmds[item[:-3]] = importlib.import_module(config['cmds_loc'][2:] + '.' + item[:-3])
-  except Exception as ex:
-    elog(ex, inspect.stack())
+    try:
+        for (r, d, f) in os.walk(config['cmds_loc']):
+            for item in f:
+                if item[-3:] != '.py': continue
+                av_cmds[item[:-3]] = importlib.import_module(config['cmds_loc'][2:] + '.' + item[:-3])
+                print("I just passed ECON 211 oooo yea.")
+    except Exception as ex:
+        elog(ex, inspect.stack())
 
 ############################################################################
 ############################################################################
