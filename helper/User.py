@@ -1,19 +1,20 @@
 from cDatabase.DB_Users import DB_Users
 
-db_users = DB_Users("db_users")
+database_users = DB_Users("db_users")
 
+# ------------------------------------ { User } ------------------------------------ # 
+    # ------------------ [ __init__() ] ------------------ # 
+        # Checks if 
 class User:
-    id = None
-    handle = None
+    id = handle = None
 
     def __init__(self, id = '', handle = ''):
-        if (id != '' and handle != ''):
-            self.id, self.handle = id, handle
-        elif (id != ''):
+        if (id != '' and handle != ''): self.id, self.handle = id, handle
+        elif (id != ''): 
             self.id = id
-            self.handle = db_users.find_handle(id)
+            self.handle = database_users.find_handle(id)
         elif (handle != ''): 
-            self.id = db_users.find_id(handle)
+            self.id = database_users.find_id(handle)
             self.handle = handle
 
     def is_admin(self):
@@ -30,30 +31,30 @@ class User:
 
     def is_taken_id(self):
         if (self.id == None): return True
-        return db_users.is_taken_id(self)
+        return database_users.is_taken_id(self)
 
     def is_taken_handle(self):
         if (self.handle == None): return True
-        return db_users.is_taken_handle(self)
+        return database_users.is_taken_handle(self)
 
     def is_registered(self):
         if (self.id == None or self.handle == None): return False
-        return db_users.is_registered(self)
+        return database_users.is_registered(self)
 
     def register(self):
         if (self.id == None or self.handle == None): return False
-        return db_users.register(self)
+        return database_users.register(self)
 
     def change_handle(self, new_handle):
         if (self.handle == new_handle): return False
         if (not self.is_registered()): return False
         self.handle = new_handle
-        return db_users.change_handle(self, new_handle)
+        return database_users.change_handle(self, new_handle)
 
     def delete(self):
         # Add remove from contests
         if (self.id == None or self.handle == None): return False
-        return db_users.remove_user(self)
+        return database_users.remove_user(self)
 
     def __str__(self):
         return "User: " + str(self.id) + ' ' + str(self.handle)
