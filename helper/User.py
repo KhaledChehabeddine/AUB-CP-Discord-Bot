@@ -4,8 +4,6 @@ from cDatabase.DB_Users import DB_Users
 import discord, json
 
 config = json.load(open('config.json', 'r'))
-
-config = json.load(open('config.json', 'r'))
 database_users = DB_Users("db_users")
 
 # ------------------------------------ { User } ------------------------------------ # 
