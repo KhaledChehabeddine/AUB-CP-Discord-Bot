@@ -1,6 +1,9 @@
 import json
 import discord
 from cDatabase.DB_Users import DB_Users
+import discord, json
+
+config = json.load(open('config.json', 'r'))
 
 config = json.load(open('config.json', 'r'))
 database_users = DB_Users("db_users")
@@ -47,7 +50,9 @@ database_users = DB_Users("db_users")
         # Checks if the target role is in the list
 
 class User:
-    id = handle = client = None
+    id = None
+    handle = None
+    client = None
 
     def __init__(self, id = '', handle = '', client = None):
         if (id != '' and handle != ''):
