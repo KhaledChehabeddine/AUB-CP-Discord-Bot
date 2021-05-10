@@ -1,10 +1,9 @@
 {
-	"prefix": ">",
+    "prefix": ">",
 	"token": "ODA5NzYyMTgxMDI5NjkxMzky.YCZzzA.of5MnIryS0hLfJQOV2qm9havW40",
-  "general_channel": 807204805890015257,
+    "general_channel": 807204805890015257,
 	"icon_url": "https://i.pinimg.com/originals/d3/69/a1/d369a13f2e8d69884e5d7ec90f9c8337.jpg",
-  "split_path": "\\",
-  "version": "1.0.0.0",
-  "cmds_loc": "./commands"
-
+    "split_path": "\\",
+    "version": "1.0.0.0",
+    "cmds_loc": "./commands"
 }
