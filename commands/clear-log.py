@@ -11,9 +11,11 @@ file = path[len(path) - 1][:-3]
 
 def is_admin_only(): return True
 
+def usage():
+  return prefix + file
+
 def description():
-  return ("Clears the Error Log.\n" 
-          + "**Usage:** `" + prefix + file + "`")
+  return "Clears the Error Log."
 
 async def execute(msg, args, client):
   try:

@@ -10,9 +10,11 @@ file = path[len(path) - 1][:-3]
 
 def is_admin_only(): return False
 
+def usage():
+  return prefix + file
+
 def description():
-  return ("Displays info about this server.\n"
-          + "**Usage:** `" + prefix + file + "`")
+  return "Displays info about this server."
 
 async def execute(msg, args, client):
   try:

@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-offset = 3
+offset = 0
 
 def get_in_date_format(st):
   dt = st.split('/')

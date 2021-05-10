@@ -10,9 +10,11 @@ file = path[len(path) - 1][:-3]
 
 def is_admin_only(): return False
 
+def usage():
+  return prefix + file
+
 def description():
-  return ("Shows User's Dircord Identification Card.\n"
-          + "**Usage:** `" + prefix + file + "`")
+  return "Shows User's Dircord Identification Card."
 
 async def execute(msg, args, client):
   try:

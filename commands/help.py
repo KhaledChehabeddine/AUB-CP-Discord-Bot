@@ -10,9 +10,11 @@ file = path[len(path) - 1][:-3]
 
 def is_admin_only(): return False
 
+def usage():
+  return prefix + file
+
 def description():
-  return ("Displays the information about commands provided by the bot.\n"
-        + "**Usage:** `" + prefix + file + "`")
+  return "Displays the information about commands provided by the bot."
 
 av_cmds = dict()
 
@@ -30,7 +32,7 @@ async def execute(msg, args, client):
     for cmd in av_cmds:
       if av_cmds[cmd].is_admin_only(): continue
       response.add_field(
-        name = prefix + cmd, 
+        name = av_cmds[cmd].usage(), 
         value = av_cmds[cmd].description(), 
         inline = False
       )

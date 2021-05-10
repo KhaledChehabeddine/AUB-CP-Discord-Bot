@@ -11,9 +11,11 @@ file = path[len(path) - 1][:-3]
 
 def is_admin_only(): return True
 
+def usage():
+  return prefix + file
+
 def description():
-  return ("Displays the information about admin commands provided by the bot.\n"
-        + "**Usage:** `" + prefix + file + "`")
+  return "Displays the information about admin commands provided by the bot."
 
 av_cmds = dict()
 
