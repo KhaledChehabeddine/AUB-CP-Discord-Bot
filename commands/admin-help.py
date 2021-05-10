@@ -34,8 +34,8 @@ def init():
 # ------------------ [ execute() ] ------------------ #
     # Checks if there are commands in "available_commands"
     # Checks if the author is an admin, returns "denied_msg" if true, otherwise "granted_msg"
-    # Adds only admin commands into the embed, then sending the message
-    # Throws an exception if any error occurs, logs it into "elog" and replies to the user with "denied_msg"
+    # Adds only admin commands into the embed
+    # Throws an exception if any error occurs, logs it with "elog" and sends "denied_msg"
 async def execute(message, args, client):
     try:
         if len(available_commands) == 0: init()
