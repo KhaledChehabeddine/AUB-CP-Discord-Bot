@@ -32,7 +32,7 @@ def init():
 # ------------------ [ on_ready() ] ------------------ #
     # Runs after running main.py
     # Calls [ init() ]
-    # Sets bot status to "playing (prefix)help"
+    # Sets bot status to "playing [prefix]help"
 @client.event
 async def on_ready(): 
     init()
@@ -42,7 +42,7 @@ async def on_ready():
 
 # ------------------ [ on_message() ] ------------------ #
     # Runs after a user sends a message
-    # Checks if command called is not empty ex. "(prefix)"
+    # Checks if command called is not empty ex. "[prefix]"
     # Checks if command called is in "available_commands"
     # Throws an exception if any occurs while running, logged using "elog()" function
         # Error message "denied_msg" sent to appropriate channel
