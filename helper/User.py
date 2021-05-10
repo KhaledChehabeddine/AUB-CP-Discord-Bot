@@ -46,7 +46,6 @@ database_users = DB_Users("db_users")
     # ------------------ [ has_role() ] ------------------ # 
         # Creates a list of the roles of the user
         # Checks if the target role is in the list
-
 class User:
     id = None
     handle = None
