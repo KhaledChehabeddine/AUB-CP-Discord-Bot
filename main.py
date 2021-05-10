@@ -16,7 +16,7 @@ prefix = config['prefix']
 client = discord.Client()
 available_commands = dict()
 
-# ------------------ [ init() ] ------------------ # 
+# ------------------ [ init() ] ------------------ #
     # Iterates over names in "folder" file of "config["cmds_loc"]"
     # Verifies if name is a command by checking if last 3 letters == ".py"
     # Commands added to "available_commands", otherwise skipped
