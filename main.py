@@ -9,7 +9,7 @@ import discord
 import inspect
 import importlib
 from helper.cLog import elog
-from helper.cEmbed import denied_msg, contest_msg
+from helper.cEmbed import denied_message, contest_msg
 
 config = json.load(open('config.json', 'r'))
 prefix = config['prefix']
@@ -17,7 +17,7 @@ client = discord.Client()
 available_commands = dict()
 
 # ------------------ [ init() ] ------------------ # 
-    # Iterates over names in "folder" file
+    # Iterates over names in "folder" file of "config["cmds_loc"]"
     # Verifies if name is a command by checking if last 3 letters == ".py"
     # Commands added to "available_commands", otherwise skipped
     # Throws an exception if any error occurs while running, logged using "elog()" function
@@ -32,7 +32,7 @@ def init():
 # ------------------ [ on_ready() ] ------------------ #
     # Runs after running main.py
     # Calls [ init() ]
-    # Sets bot status to "playing >help"
+    # Sets bot status to "playing (prefix)help"
 @client.event
 async def on_ready(): 
     init()
@@ -42,24 +42,24 @@ async def on_ready():
 
 # ------------------ [ on_message() ] ------------------ #
     # Runs after a user sends a message
-    # Checks if command called is not empty ex. ">"
+    # Checks if command called is not empty ex. "(prefix)"
     # Checks if command called is in "available_commands"
     # Throws an exception if any occurs while running, logged using "elog()" function
         # Error message "denied_msg" sent to appropriate channel
 @client.event
-async def on_message(msg):
+async def on_message(message):
     try:
-        if msg.content[:len(prefix)] != prefix or msg.author.bot: return
-        arguments = msg.content[len(prefix):].split()
+        if message.content[:len(prefix)] != prefix or message.author.bot: return
+        arguments = message.content[len(prefix):].split()
 
         if (len(arguments) == 0): return
         command = arguments[0]
 
         if not command in available_commands.keys(): return
-        await available_commands[command].execute(msg, args[1:], client)
+        await available_commands[command].execute(message, args[1:], client)
 
     except Exception as ex:
         elog(ex, inspect.stack()) 
-        await msg.reply(embed = denied_msg())
+        await message.reply(embed = denied_message())
 
 client.run(config['token'])
