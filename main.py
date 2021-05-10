@@ -9,7 +9,7 @@ import discord
 import inspect
 import importlib
 from helper.cLog import elog
-from helper.cEmbed import denied_message, contest_msg
+from helper.cEmbed import denied_msg
 
 config = json.load(open('config.json', 'r'))
 prefix = config['prefix']
@@ -60,6 +60,6 @@ async def on_message(message):
 
     except Exception as ex:
         elog(ex, inspect.stack()) 
-        await message.reply(embed = denied_message())
+        await message.reply(embed = denied_msg())
 
 client.run(config['token'])
