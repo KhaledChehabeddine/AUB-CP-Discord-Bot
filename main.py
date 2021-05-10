@@ -1,6 +1,6 @@
 # ------------------ [ Authors: ] ------------------ #
     # Ahmad Zaaroura
-    # Khaled Chehabeddine (The Laziest)
+    # Khaled Chehabeddine
     # Miguel Merheb
 
 import os
