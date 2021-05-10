@@ -1,9 +1,11 @@
 from cDatabase.DB_Users import DB_Users
+from cDatabase.KV_Database import KV_Database
 import discord, json
 
 config = json.load(open('config.json', 'r'))
 
 db_users = DB_Users("db_users")
+cf_ranking = KV_Database('CodeForces_Ranking')
 
 class User:
     id = None
@@ -79,3 +81,21 @@ class User:
         member = await guild.fetch_member(int(self.id))
         role = discord.utils.get(member.guild.roles, name = _role)
         return role in member.roles
+
+    async def remove_role(self, _role):
+        guild = self.client.get_guild(config['guild_id'])
+        member = await guild.fetch_member(int(self.id))
+        role = discord.utils.get(member.guild.roles, name = _role)
+        await member.remove_roles(role)
+
+    async def get_lower_roles(self, role):
+        roles = await self.get_roles()
+        x = cf_ranking.get(role)
+        lst = []
+       
+        for r in roles:
+          if r.name in cf_ranking.keys() and cf_ranking.get(r.name) < x:
+            lst.append(r.name)
+
+        return lst
+
