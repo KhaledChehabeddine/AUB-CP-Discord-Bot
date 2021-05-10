@@ -1,4 +1,7 @@
 from cDatabase.DB_Users import DB_Users
+import discord, json
+
+config = json.load(open('config.json', 'r'))
 
 db_users = DB_Users("db_users")
 
@@ -57,3 +60,20 @@ class User:
 
     def __str__(self):
         return "User: " + str(self.id) + ' ' + str(self.handle)
+
+    async def add_role(self, _role, client):
+        guild = client.get_guild(config['guild_id'])
+        member = await guild.fetch_member(int(self.id))
+        role = discord.utils.get(member.guild.roles, name = _role)
+        await member.add_roles(role)
+
+    async def get_roles(self, client):
+        guild = client.get_guild(config['guild_id'])
+        member = await guild.fetch_member(int(self.id))
+        return member.roles
+
+    async def has_role(self, _role, client):
+        guild = client.get_guild(config['guild_id'])
+        member = await guild.fetch_member(int(self.id))
+        role = discord.utils.get(member.guild.roles, name = _role)
+        return role in member.roles
