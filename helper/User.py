@@ -8,8 +8,9 @@ db_users = DB_Users("db_users")
 class User:
     id = None
     handle = None
+    client = None
 
-    def __init__(self, id = '', handle = ''):
+    def __init__(self, id = '', handle = '', client = None):
         if (id != '' and handle != ''):
             self.id, self.handle = id, handle
         elif (id != ''):
@@ -18,6 +19,7 @@ class User:
         elif (handle != ''): 
             self.id = db_users.find_id(handle)
             self.handle = handle
+        self.client = client
 
     def is_admin(self):
         if self.id in [
@@ -61,19 +63,19 @@ class User:
     def __str__(self):
         return "User: " + str(self.id) + ' ' + str(self.handle)
 
-    async def add_role(self, _role, client):
-        guild = client.get_guild(config['guild_id'])
+    async def add_role(self, _role):
+        guild = self.client.get_guild(config['guild_id'])
         member = await guild.fetch_member(int(self.id))
         role = discord.utils.get(member.guild.roles, name = _role)
         await member.add_roles(role)
 
-    async def get_roles(self, client):
-        guild = client.get_guild(config['guild_id'])
+    async def get_roles(self):
+        guild = self.client.get_guild(config['guild_id'])
         member = await guild.fetch_member(int(self.id))
         return member.roles
 
-    async def has_role(self, _role, client):
-        guild = client.get_guild(config['guild_id'])
+    async def has_role(self, _role):
+        guild = self.client.get_guild(config['guild_id'])
         member = await guild.fetch_member(int(self.id))
         role = discord.utils.get(member.guild.roles, name = _role)
         return role in member.roles
