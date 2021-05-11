@@ -1,10 +1,51 @@
+import json
+import discord
 from cDatabase.DB_Users import DB_Users
 import discord, json
 
 config = json.load(open('config.json', 'r'))
+database_users = DB_Users("db_users")
 
-db_users = DB_Users("db_users")
+# ------------------------------------ { User } ------------------------------------ # 
+    # ------------------ [ __init__() ] ------------------ # 
+        # Initializes id and handle based on given parameters
+    
+    # ------------------ [ is_admin() ] ------------------ # 
+        # Returns true if user is Ahmad, Khaled, Miguel, or MB, otherwise false
+    
+    # ------------------ [ tag() ] ------------------ # 
+        # Tags the user that called the command
 
+    # ------------------ [ is_taken_id() ] ------------------ # 
+        # Checks if the ID is already registered
+    
+    # ------------------ [ is_taken_handle() ] ------------------ # 
+        # Checks if an ID is already registered to another handle
+
+    # ------------------ [ is_registered() ] ------------------ # 
+        # Checks if user is in the database
+
+    # ------------------ [ register() ] ------------------ # 
+        # Registers the user to the bot's database
+
+    # ------------------ [ change_handle() ] ------------------ # 
+        # Changes the user's handle in the database
+
+    # ------------------ [ delete() ] ------------------ # 
+        # Deletes the user from the database
+
+    # ------------------ [ __str__() ] ------------------ # 
+        # Returns a string representation of the user with their id and handle
+    
+    # ------------------ [ add_role() ] ------------------ # 
+        # Adds a role to the database
+    
+    # ------------------ [ get_roles() ] ------------------ # 
+        # Retrieves the role from the database
+
+    # ------------------ [ has_role() ] ------------------ # 
+        # Creates a list of the roles of the user
+        # Checks if the target role is in the list
 class User:
     id = None
     handle = None
@@ -15,9 +56,9 @@ class User:
             self.id, self.handle = id, handle
         elif (id != ''):
             self.id = id
-            self.handle = db_users.find_handle(id)
+            self.handle = database_users.find_handle(id)
         elif (handle != ''): 
-            self.id = db_users.find_id(handle)
+            self.id = database_users.find_id(handle)
             self.handle = handle
         self.client = client
 
@@ -26,8 +67,7 @@ class User:
             '763289145288032268',
             '763319277540605972',
             '763345404674048020',
-            '402887362046066698'
-        ]: return True
+            '402887362046066698']: return True
         return False
 
     def tag(self):
@@ -35,30 +75,29 @@ class User:
 
     def is_taken_id(self):
         if (self.id == None): return True
-        return db_users.is_taken_id(self)
+        return database_users.is_taken_id(self)
 
     def is_taken_handle(self):
         if (self.handle == None): return True
-        return db_users.is_taken_handle(self)
+        return database_users.is_taken_handle(self)
 
     def is_registered(self):
         if (self.id == None or self.handle == None): return False
-        return db_users.is_registered(self)
+        return database_users.is_registered(self)
 
     def register(self):
         if (self.id == None or self.handle == None): return False
-        return db_users.register(self)
+        return database_users.register(self)
 
     def change_handle(self, new_handle):
         if (self.handle == new_handle): return False
         if (not self.is_registered()): return False
         self.handle = new_handle
-        return db_users.change_handle(self, new_handle)
+        return database_users.change_handle(self, new_handle)
 
     def delete(self):
-        # Add remove from contests
         if (self.id == None or self.handle == None): return False
-        return db_users.remove_user(self)
+        return database_users.remove_user(self)
 
     def __str__(self):
         return "User: " + str(self.id) + ' ' + str(self.handle)
