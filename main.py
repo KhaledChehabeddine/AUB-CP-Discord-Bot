@@ -63,7 +63,7 @@ async def on_message(message):
         command = arguments[0]
 
         if not command in available_commands.keys(): return
-        await available_commands[command].execute(message, args[1:], client)
+        await available_commands[command].execute(message, arguments[1:], client)
 
     except Exception as ex:
         elog(ex, inspect.stack()) 
