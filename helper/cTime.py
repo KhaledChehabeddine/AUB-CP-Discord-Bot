@@ -47,7 +47,8 @@ def current_date():
     # ------------------ [ footer() ] ------------------ # 
         # Returns the date and time in "MM/DD/YYYY at HH:MM" format
 class MyDate():
-    month, day, year, hour, minute = int(), int(), int(), int(), int()
+    month, day, year = int(), int(), int()
+    hour, minute = int(), int()
 
     def days_in_month(self):
         if (self.month == 2):
@@ -58,11 +59,11 @@ class MyDate():
         return 31
 
     def __init__(self, st = current_date()):
-        date = [int(x) for x in st.split(' ')[0].split('/')]
-        time = [int(x) for x in st.split(' ')[1].split(':')[:2]]
+        _date = [int(x) for x in st.split(' ')[0].split('/')]
+        _time = [int(x) for x in st.split(' ')[1].split(':')[:2]]
 
-        self.month, self.day, self.year = date[0], date[1], date[2]
-        self.hour, self.minute = time[0], time[1]
+        self.month, self.day, self.year = _date[0], _date[1], _date[2]
+        self.hour, self.minute = _time[0], _time[1]
     
     def is_valid(self):
         try:
@@ -89,35 +90,35 @@ class MyDate():
         except Exception: return False
 
     def add(self, duration):
-        dtime = datetime(self.year, self.month, self.day, self.hour, self.minute)
-        dtime += timedelta(hours = duration)
+        _datetime = datetime(self.year, self.month, self.day, self.hour, self.minute)
+        _datetime += timedelta(hours = duration)
 
-        date = [int(x) for x in str(dtime).split(' ')[0].split('-')]
-        self.year, self.month, self.day = date[0], date[1], date[2]
+        _date = [int(x) for x in str(dt).split(' ')[0].split('-')]
+        self.year, self.month, self.day = _datetime[0], _datetime[1], _datetime[2]
         
-        time = [int(x) for x in str(dtime).split(' ')[1].split(':')[:2]]
-        self.hour, self.minute = time[0], time[1]
+        _time = [int(x) for x in str(_datetime).split(' ')[1].split(':')[:2]]
+        self.hour, self.minute = _time[0], _time[1]
 
         return str(self)
 
     def delta(self):
-        dtime = datetime(self.year, self.month, self.day, self.hour, self.minute)
-        ctime = datetime.now()
-        ctime += timedelta(hours = offset)
-        return int((dtime - ctime).total_seconds() / 60)
+        _datetime = datetime(self.year, self.month, self.day, self.hour, self.minute)
+        current_date = datetime.now()
+        current_date += timedelta(hours = offset)
+        return int((_datetime - current_date).total_seconds() / 60)
 
     def __lt__(self, date2):
-        dtime = datetime(self.year, self.month, self.day, self.hour, self.minute)
-        ctime = datetime(date2.year, date2.month, date2.day, date2.hour, date2.minute)
-        return (int((dtime - ctime).total_seconds() / 60) < 0)
+        _datetime1 = datetime(self.year, self.month, self.day, self.hour, self.minute)
+        _datetime2 = datetime(date2.year, date2.month, date2.day, date2.hour, date2.minute)
+        return (int((_datetime1 - _datetime2).total_seconds() / 60) < 0)
 
     def __str__(self):
-        month, day, year = str(self.month), str(self.day), str(self.year)
-        hour, minute = str(self.hour), str(self.minute)
-        if (self.month < 10): month = "0" + month
-        if (self.day < 10): day = "0" + day
-        if (self.hour < 10): hour = "0" + hour
-        if (self.minute < 10): minute = "0" + minute
-        return month + "/" + day + "/" + year + " " + hour + ":" + minute
+        _month, _day, _year = str(self.month), str(self.day), str(self.year)
+        _hour, _minute = str(self.hour), str(self.minute)
+        if (self.month < 10): _month = "0" + _month
+        if (self.day < 10): _day = "0" + _day
+        if (self.hour < 10): _hour = "0" + _hour
+        if (self.minute < 10): _minute = "0" + _minute
+        return _month + "/" + _day + "/" + _year + " " + _hour + ":" + _minute
 
     def footer(self): return str(self).split()[0] + ' at ' + str(self).split()[1]
