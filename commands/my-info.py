@@ -25,7 +25,7 @@ def description(): return "Shows User's Dircord Identification Card."
     # Throws exception "ex" if any error occurs, logs it with "elog" and sends "denied_msg"
 async def execute(msg, args, client):
     try:
-        user = message.author
+        user = msg.author
         response = granted_msg(
             "Discord Identification Card", 
             "This is a description of user: " + str(user)
@@ -53,7 +53,7 @@ async def execute(msg, args, client):
                 value = user.top_role.name, 
             )
         except Exception: pass
-        await message.channel.send(embed = response)
+        await msg.channel.send(embed = response)
     except Exception as ex:
         elog(ex, inspect.stack())
-        await message.reply(embed = denied_msg())
+        await msg.reply(embed = denied_msg())

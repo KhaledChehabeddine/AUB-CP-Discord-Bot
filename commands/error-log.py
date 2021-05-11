@@ -25,24 +25,24 @@ def description(): return "Displays the Error Log."
     # Creates a string "errorlogs" containing all error logs of "error_log.txt"
     # Checks if string is valid, if not, sends "denied_msg", otherwise sends "errorlogs"
     # Throws an exception if any error occurs, logs it with "elog" and sends "denied_msg"
-async def execute(message, args, client):
+async def execute(msg, args, client):
     try:
-        author = User(id = str(message.author.id))
+        author = User(id = str(msg.author.id))
         if not author.is_admin():
-            desc = message.author.mention + " You are not allowed to use this function."
-            await message.reply(embed = denied_msg("Admin Command", desc))
+            desc = msg.author.mention + " You are not allowed to use this function."
+            await msg.reply(embed = denied_msg("Admin Command", desc))
             return None
 
         fs = open('./logs/error_log.txt', 'r')
         errorlogs = ""
         for line in fs.readlines(): errorlogs += line + '\n'
     
-        if (len(s) == 0):
-            await message.reply(embed = denied_msg("Error Log is Empty", ""))
+        if (len(errorlogs) == 0):
+            await msg.reply(embed = denied_msg("Error Log is Empty", ""))
             return
 
-        await message.channel.send("```" + errorlogs + "```")
+        await msg.channel.send("```" + errorlogs + "```")
         fs.close()
     except Exception as ex:
         elog(ex, inspect.stack())
-        await message.reply(embed = denied_msg())
+        await msg.reply(embed = denied_msg())

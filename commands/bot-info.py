@@ -22,7 +22,7 @@ def description(): return "Displays information about me!"
 # ------------------ [ execute() ] ------------------ #
     # Creates and sends an embed that gives the user info about KFC Bot
     # Throws an exception if an error occurs, logs it in "elog" and sends "denied_msg"
-async def execute(message, args, client):
+async def execute(msg, args, client):
     try:
         response = granted_msg("InFo AbOuT mE! ^_^")
         response.color = 0x302dd7
@@ -52,7 +52,7 @@ async def execute(message, args, client):
             value = "***More Features Coming Soon!\nStay tuned***",
             inline = False
         )
-        await message.channel.send(embed = response)
+        await msg.channel.send(embed = response)
     except Exception as ex:
         elog(ex, inspect.stack())
-        await message.reply(embed = denied_msg())
+        await msg.reply(embed = denied_msg())

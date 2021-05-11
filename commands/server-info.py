@@ -23,30 +23,30 @@ def description(): return "Displays info about this server."
     # Checks if server exists, throws an exception and sends "denied_msg" if an error occurs
     # Creates and sends an embed "response" with information of "message's" server 
     # Throws exception "ex" if any error occurs, logs it with "elog" and sends "denied_msg"
-async def execute(message, args, client):
+async def execute(msg, args, client):
     try:
         try:
-            response = granted_msg(str(message.guild.name) + " Info")
+            response = granted_msg(str(msg.guild.name) + " Info")
         except Exception:
-            await message.reply(embed = denied_msg("This is not a Server", ""))
+            await msg.reply(embed = denied_msg("This is not a Server", ""))
             return
-        response.set_thumbnail(url = message.guild.icon_url)
+        response.set_thumbnail(url = msg.guild.icon_url)
         response.add_field(
             name = "Owner", 
-            value = "<@!" + str(message.guild.owner_id) + ">", 
+            value = "<@!" + str(msg.guild.owner_id) + ">", 
             inline = False
         )
         response.add_field(
             name = "Region", 
-            value = str(message.guild.region), 
+            value = str(msg.guild.region), 
             inline = False
         )
         response.add_field(
             name = "Member Count", 
-            value = str(message.guild.member_count), 
+            value = str(msg.guild.member_count), 
             inline = False
         )
-        await message.channel.send(embed = response)
+        await msg.channel.send(embed = response)
     except Exception as ex:
         elog(ex, inspect.stack())
-        await message.reply(embed = denied_msg())
+        await msg.reply(embed = denied_msg())

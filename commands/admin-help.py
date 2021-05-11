@@ -36,14 +36,14 @@ def init():
     # Checks if the author is an admin, returns "denied_msg" if true, otherwise "granted_msg"
     # Adds only admin commands into the embed
     # Throws an exception if any error occurs, logs it with "elog" and sends "denied_msg"
-async def execute(message, args, client):
+async def execute(msg, args, client):
     try:
         if len(available_commands) == 0: init()
 
-        author = User(id = str(message.author.id))
+        author = User(id = str(msg.author.id))
         if not author.is_admin():
-            desc = message.author.mention + " You are not allowed to use this function."
-            await message.reply(embed = denied_msg("Admin Command", desc))
+            desc = msg.author.mention + " You are not allowed to use this function."
+            await msg.reply(embed = denied_msg("Admin Command", desc))
             return
 
         response = granted_msg("Admin Commands")
@@ -54,7 +54,7 @@ async def execute(message, args, client):
                 value = available_commands[cmd].description(), 
                 inline = False
             )
-        await message.channel.send(embed = response)
+        await msg.channel.send(embed = response)
     except Exception as ex:
         elog(ex, inspect.stack())
-        await message.reply(embed = denied_msg())
+        await msg.reply(embed = denied_msg())

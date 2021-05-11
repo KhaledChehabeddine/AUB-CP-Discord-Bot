@@ -45,7 +45,7 @@ async def on_ready():
     init()
     await client.change_presence(activity = discord.Game(prefix + "help"))
     #await client.change_presence(status = discord.Status.offline)
-    print("KFC Bot online.")
+    print("Bot online.")
 
 # ------------------ [ on_message() ] ------------------ #
     # Runs after a user sends a message
@@ -54,29 +54,35 @@ async def on_ready():
     # Throws an exception if any occurs while running, logged using "elog()" function
         # Error message "denied_msg" sent to appropriate channel
 @client.event
-async def on_message(message):
+async def on_message(msg):
     try:
-        if message.content[:len(prefix)] != prefix or message.author.bot: return
-        arguments = message.content[len(prefix):].split()
+        if msg.content[:len(prefix)] != prefix or msg.author.bot: return
+        args = msg.content[len(prefix):].split()
 
-        if (len(arguments) == 0): return
-        command = arguments[0]
+        if (len(args) == 0): return
+        command = args[0]
 
         if not command in available_commands.keys(): return
-        await available_commands[command].execute(message, arguments[1:], client)
+        await available_commands[command].execute(msg, args[1:], client)
 
     except Exception as ex:
         elog(ex, inspect.stack()) 
-        await message.reply(embed = denied_msg())
+        await msg.reply(embed = denied_msg())
 
-async def my_background_task():
+# ------------------ [ my_background_task__Role_Management() ] ------------------ #
+    # Runs after the bot becomes online
+    # Checks that each user in the user database of the bot has the correct role
+    # based on his rank on codeforces
+    # Checks 1 user each 5 seconds
+    # 1 loop over the users each 3 hours
+async def my_background_task__Role_Management():
   await client.wait_until_ready()
   await asyncio.sleep(2)
  
   while not client.is_closed():
-    for (k, v) in db_users.items():
+    for (user_id, user_handle) in db_users.items():
       await asyncio.sleep(5)
-      user = User(id = k, handle = v, client = client)
+      user = User(id = user_id, handle = user_handle, client = client)
       rank = cf_api.user_rank(user)
       if await user.has_role(rank): continue
       lst = await user.get_different_roles(rank)
@@ -86,5 +92,5 @@ async def my_background_task():
     
     await asyncio.sleep(3 * 60 * 60)
 
-client.loop.create_task(my_background_task())
+client.loop.create_task(my_background_task__Role_Management())
 client.run(config['token'])

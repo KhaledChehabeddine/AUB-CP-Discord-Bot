@@ -25,19 +25,19 @@ def description(): return "Clears the Error Log."
     # Clears the "error_log.txt" file
     # Sends a message confirming the log was cleared
     # Throws an exception if any error occurs, logs it with "elog" and sends "denied_msg"
-async def execute(message, args, client):
+async def execute(msg, args, client):
     try:
-        author = User(id = str(message.author.id))
+        author = User(id = str(msg.author.id))
         if not author.is_admin():
-            desc = message.author.mention + " You are not allowed to use this function."
-            await message.reply(embed = denied_msg("Admin Command", desc))
+            desc = msg.author.mention + " You are not allowed to use this function."
+            await msg.reply(embed = denied_msg("Admin Command", desc))
             return None
 
         fs = open('./logs/error_log.txt', 'w')
         fs.seek(0)
         fs.truncate()
         fs.close()
-        await message.channel.send(embed = granted_msg("Error Log Cleared Successfully", ""))
+        await msg.channel.send(embed = granted_msg("Error Log Cleared Successfully", ""))
     except Exception as ex:
         elog(ex, inspect.stack())
-        await message.reply(embed = denied_msg())
+        await msg.reply(embed = denied_msg())

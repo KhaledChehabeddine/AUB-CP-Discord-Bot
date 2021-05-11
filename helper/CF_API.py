@@ -6,37 +6,23 @@ database_users = DB_Users('db_users')
 cf_api = codeforces_api.CodeforcesApi()
 
 # ------------------------------------ { CF_API } ------------------------------------ # 
+class CF_API():
     # ------------------ [ user_info() ] ------------------ # 
         # Returns information of the user
-    
-    # ------------------ [ user_status() ] ------------------ # 
-        # Returns the status of the user
-    
-    # ------------------ [ user_rating() ] ------------------ # 
-        # Returns the current CodeForces rating of the user
-
-    # ------------------ [ contest_rating_changes() ] ------------------ # 
-        # Returns the user's "rank", "handle", "old_rating", "new_rating" from "contest"
-    
-    # ------------------ [ solved_problems() ] ------------------ # 
-        # Checks if the problem's verdict was "OK" before counting it
-        # Returns problems solved from "problemset", "gym", and "total" = "problemset" + "gym"
-
-    # ------------------ [ solved_ratings() ] ------------------ # 
-        # Checks if the problem's verdict was "OK" before counting it
-        # Returns the number of problems solved by the user at each difficulty rating
-
-    # ------------------ [ user_rank() ] ------------------ # 
-        # Returns the user's CodeForces rating, if not available then Inactive
-class CF_API():
     def user_info(self, user): return cf_api.user_info([user.handle])[0]
 
+    # ------------------ [ user_status() ] ------------------ # 
+        # Returns the status of the user
     def user_status(self, user): return cf_api.user_status(user.handle)
 
+    # ------------------ [ user_rating() ] ------------------ # 
+        # Returns the current CodeForces rating of the user
     def user_rating(self, handle):
         lst = cf_api.user_info([handle])[0]
         return lst['rating']
 
+    # ------------------ [ contest_rating_changes() ] ------------------ # 
+        # Returns the user's "rank", "handle", "old_rating", "new_rating" from "contest"
     def contest_rating_changes(self, contest_id):
         try:
             lst = cf_api.contest_rating_changes(contest_id)
@@ -51,6 +37,9 @@ class CF_API():
             return result, contest
         except Exception: return None
 
+    # ------------------ [ solved_problems() ] ------------------ # 
+        # Checks if the problem's verdict was "OK" before counting it
+        # Returns problems solved from "problemset", "gym", and "total" = "problemset" + "gym"
     def solved_problems(self, user):
         d = {}
         solved = set()
@@ -78,6 +67,9 @@ class CF_API():
 
         return {'total': total + gym, 'problemset': total, 'gym': gym, 'problems': sorted(d.items())}
 
+    # ------------------ [ solved_ratings() ] ------------------ # 
+        # Checks if the problem's verdict was "OK" before counting it
+        # Returns the number of problems solved by the user at each difficulty rating
     def solved_ratings(self, user):
         d = {}
         solved = set()
@@ -101,6 +93,8 @@ class CF_API():
 
         return list(d.items())
 
+    # ------------------ [ user_rank() ] ------------------ # 
+        # Returns the user's CodeForces rating, if not available then Inactive
     def user_rank(self, user):
         rating = self.user_rating(user.handle)
         if (rating == None): return "Inactive"
