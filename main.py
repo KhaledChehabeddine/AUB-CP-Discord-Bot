@@ -3,18 +3,12 @@
     # Khaled Chehabeddine
     # Miguel Merheb
 
-import os
-import inspect
-import discord
-import json
-import importlib
-import asyncio
+import os, json, inspect, discord, asyncio, importlib
 from helper.cLog import elog
 from helper.cEmbed import denied_msg
 from helper.User import User
 from cDatabase.DB_Users import DB_Users
 from helper.CF_API import CF_API
-
 
 config = json.load(open('config.json', 'r'))
 prefix = config['prefix']

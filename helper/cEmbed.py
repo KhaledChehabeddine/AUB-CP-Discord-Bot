@@ -1,5 +1,4 @@
-import json
-import discord
+import json, discord
 from helper.cTime import MyDate
 
 config = json.load(open('config.json', 'r'))

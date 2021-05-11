@@ -1,5 +1,4 @@
-import json
-import discord
+import json, discord
 from cDatabase.DB_Users import DB_Users
 from cDatabase.KV_Database import KV_Database
 
