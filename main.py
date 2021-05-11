@@ -10,7 +10,6 @@ from helper.User import User
 from cDatabase.DB_Users import DB_Users
 from helper.CF_API import CF_API
 
-
 config = json.load(open('config.json', 'r'))
 prefix = config['prefix']
 client = discord.Client()
