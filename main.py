@@ -3,12 +3,7 @@
     # Khaled Chehabeddine
     # Miguel Merheb
 
-import os
-import inspect
-import discord
-import json
-import importlib
-import asyncio
+import os, json, inspect, discord, asyncio, importlib
 from helper.cLog import elog
 from helper.cEmbed import denied_msg
 from helper.User import User
