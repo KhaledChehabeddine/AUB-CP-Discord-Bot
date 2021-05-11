@@ -19,7 +19,7 @@ class CF_API():
         # Returns the current CodeForces rating of the user
     def user_rating(self, handle):
         lst = cf_api.user_info([handle])[0]
-        return lst['rating']
+        return lst.rating
 
     # ------------------ [ contest_rating_changes() ] ------------------ # 
         # Returns the user's "rank", "handle", "old_rating", "new_rating" from "contest"
