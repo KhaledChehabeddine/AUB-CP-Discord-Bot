@@ -1,3 +1,4 @@
+# Contains all CodeForces ranks with their ratings
 DataBase = {
     "Inactive" : -1e18,
     "Newbie" : 1200,
