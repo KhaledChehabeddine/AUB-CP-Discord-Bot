@@ -1,1 +1,0 @@
-05/12/2021 at 14:28 GitHub/KFC-Bot/commands/session.py CALL execute() ERROR-MSG 'str' object has no attribute 'month'

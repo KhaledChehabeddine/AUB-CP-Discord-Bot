@@ -24,7 +24,7 @@ def description(): return "```fix\nCreates a session and announces it to the ser
 
 # ------------------ [ check_args() ] ------------------ #
     # Checks if the command called by the user is valid
-async def check_args(msg, args):
+async def check_args(msg, args, client):
     author = User(id = str(msg.author.id))
     if not author.is_admin():
         description = msg.author.mention + " You are not allowed to use this function."

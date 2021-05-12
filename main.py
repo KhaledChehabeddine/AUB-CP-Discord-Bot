@@ -14,6 +14,7 @@ config = json.load(open('config.json', 'r'))
 prefix = config['prefix']
 client = discord.Client()
 available_commands = dict()
+available_modules = dict() # dict of dicts
 db_users = DB_Users('db_users')
 cf_api = CF_API()
 
@@ -28,6 +29,14 @@ def init():
             for item in folder:
                 if item[-3:] != '.py': continue
                 available_commands[item[:-3]] = importlib.import_module(config['cmds_loc'][2:] + '.' + item[:-3])
+
+        for (path, general_folder, folder) in os.walk(config['module_cmds_loc']):
+            for inner_folder in general_folder: available_modules[inner_folder] = {}
+            current_folder = path.split(config["split_path"])[-1]
+            for item in folder:
+                if item[-3:] != ".py": continue
+                file_path = config['module_cmds_loc'][2:] + "." + current_folder + "." + item[:-3]
+                available_modules[current_folder][item[:-3]] = importlib.import_module(file_path)
     except Exception as ex: elog(ex, inspect.stack())
 
 # ------------------ [ on_ready() ] ------------------ #
@@ -56,8 +65,20 @@ async def on_message(msg):
         if (len(args) == 0): return
         command = args[0]
 
-        if not command in available_commands.keys(): return
-        await available_commands[command].execute(msg, args[1:], client)
+        if command in available_commands.keys(): 
+            await available_commands[command].execute(msg, args[1:], client)
+            return
+
+        module = command
+        if module in available_modules.keys():
+            if len(args) < 2:
+                desc = "Try `" + prefix + module + " help` to see available commands for this module"
+                await msg.reply(embed = denied_msg("Warning", desc))
+                return
+            command = args[1]
+            if not command in available_modules[module].keys(): return
+            if command in ["help", "admin-help"]: await available_modules[module][command].execute(msg, args[2:], client, module)
+            else: available_modules[module][command].execute(msg, args[2:], client)
 
     except Exception as ex:
         elog(ex, inspect.stack()) 
