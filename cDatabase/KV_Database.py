@@ -2,11 +2,10 @@ import os, importlib
 
 # ------------------------------------ { KV_Database } ------------------------------------ #
 class KV_Database:
-    db = dict()
-    path = str()
+    db, path = dict(), str()
 
     # ------------------ [ exist() ] ------------------ #
-        # Returns Tru if the path already exists
+        # Returns True if the path already exists
         # and False otherwise
     def exist(self): return os.path.isfile(self.path)
 
@@ -55,10 +54,10 @@ class KV_Database:
         # Returns a list of (key, value) pairs
     def values(self): return list(self.db.values())
 
-    # ------------------ [ count() ] ------------------ # 
+    # ------------------ [ find() ] ------------------ # 
         # Returns True if the key is in the database
         # and False otherwise
-    def count(self, key): return (key in self.db.keys())
+    def find(self, key): return (key in self.db.keys())
 
     # ------------------ [ save() ] ------------------ # 
         # Saves the database to the .py file
