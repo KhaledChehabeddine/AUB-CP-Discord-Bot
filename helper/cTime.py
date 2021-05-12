@@ -115,3 +115,10 @@ class MyDate():
     # ------------------ [ footer() ] ------------------ # 
         # Returns the date and time in "MM/DD/YYYY at HH:MM" format
     def footer(self): return str(self).split()[0] + ' at ' + str(self).split()[1]
+
+    def __eq__(self, date2):
+        return (date2.month == self.month
+                and date2.day == self.day
+                and date2.year == self.year
+                and date2.hour == self.hour
+                and date2.minute == self.minute)
