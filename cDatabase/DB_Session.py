@@ -9,7 +9,7 @@ class DB_Session(KV_Database):
     def create(self, session):
         session_id = max(list(self.db.keys()) + [0]) + 1
         self.db[session_id] = {
-            'date': session._date, 
+            'date': str(session._date), 
             'duration': session.duration,
             'topic': session.topic,
             'host': session.host,

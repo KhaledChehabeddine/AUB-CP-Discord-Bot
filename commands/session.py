@@ -30,7 +30,7 @@ async def check_args(msg, args):
         description = msg.author.mention + " You are not allowed to use this function."
         await msg.reply(embed = denied_msg("Admin Command", description))
         return None
-    if len(args) < 5:
+    if len(args) < 4:
         description = msg.author.mention + "\n"
         await msg.reply(embed = denied_msg("Command Format Error", description))
         return None
@@ -48,7 +48,9 @@ async def check_args(msg, args):
         await msg.reply(embed = denied_msg("Invalid Contest Duration", ""))
         return None  
 
-    session = Session(start_date, session_duration, args[3], msg.author.name, args[4])
+    if len(args) == 4: session = Session(start_date, session_duration, args[3], msg.author.name)
+    else: session = Session(start_date, session_duration, args[3], msg.author.name, args[4])
+
     if session.is_found():
         description = msg.author.mention + " This session already exists"
         await msg.reply(embed = denied_msg("Session Error", description))

@@ -11,7 +11,7 @@ class Session:
 
     def __init__(self, date, duration, topic, host, desc = "", _id = -1):
         if _id == -1:
-            self._date = str(date)
+            self._date = date
             self.duration = duration
             self.topic = topic
             self.host = host
