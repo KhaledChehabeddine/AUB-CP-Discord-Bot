@@ -70,21 +70,20 @@ async def on_message(msg):
     # Checks 1 user each 5 seconds
     # 1 loop over the users each 3 hours
 async def my_background_task__Role_Management():
-  await client.wait_until_ready()
-  await asyncio.sleep(2)
+    await client.wait_until_ready()
+    await asyncio.sleep(2)
  
-  while not client.is_closed():
-    for (user_id, user_handle) in db_users.items():
-      await asyncio.sleep(5)
-      user = User(id = user_id, handle = user_handle, client = client)
-      rank = cf_api.user_rank(user)
-      if await user.has_role(rank): continue
-      lst = await user.get_different_roles(rank)
-      for r in lst:
-        await user.remove_role(r)
-      await user.add_role(rank)
-    
-    await asyncio.sleep(3 * 60 * 60)
+    while not client.is_closed():
+        for (user_id, user_handle) in db_users.items():
+            await asyncio.sleep(5)
+            user = User(id = user_id, handle = user_handle, client = client)
+            rank = cf_api.user_rank(user)
+            if await user.has_role(rank): continue
+            lst = await user.get_different_roles(rank)
+            for r in lst:
+                await user.remove_role(r)
+            await user.add_role(rank)
+        await asyncio.sleep(3 * 60 * 60)
 
 client.loop.create_task(my_background_task__Role_Management())
 client.run(config['token'])
