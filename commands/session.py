@@ -69,26 +69,26 @@ async def execute(msg, args, client):
 
         response = granted_msg("ACM Session", "")
         response.add_field(
-            name = "Date:", 
+            name = "Date", 
             value = "```fix\n" + str(session._date) + "```", 
-            inline = False
+            inline = True
         )
         response.add_field(
-            name = "Topic:", 
+            name = "Host",
+            value = "```fix\n" + session.host + "```",
+            inline = True
+        )
+        response.add_field(
+            name = "Topic", 
             value = "```ini\n" + session.topic + "```", 
             inline = False
         )
         if (session.desc != "-"):
             response.add_field(
-                name = "Description:", 
+                name = "Description", 
                 value = "```bash\n" + session.desc + "```", 
                 inline = False
             )
-        response.add_field(
-            name = "Host:",
-            value = "```fix\n" + session.host + "```",
-            inline = False
-        )
         channel = client.get_channel(config['general_channel'])
         await channel.send(config['active_tag'])
         await channel.send(embed = response)
