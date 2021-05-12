@@ -78,7 +78,7 @@ async def on_message(msg):
             command = args[1]
             if not command in available_modules[module].keys(): return
             if command in ["help", "admin-help"]: await available_modules[module][command].execute(msg, args[2:], client, module)
-            else: available_modules[module][command].execute(msg, args[2:], client)
+            else: await available_modules[module][command].execute(msg, args[2:], client)
 
     except Exception as ex:
         elog(ex, inspect.stack()) 

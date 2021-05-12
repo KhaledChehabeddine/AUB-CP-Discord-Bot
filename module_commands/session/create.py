@@ -24,14 +24,14 @@ def description(): return "```fix\nCreates a session and announces it to the ser
 
 # ------------------ [ check_args() ] ------------------ #
     # Checks if the command called by the user is valid
-async def check_args(msg, args, client):
+async def check_args(msg, args):
     author = User(id = str(msg.author.id))
     if not author.is_admin():
         description = msg.author.mention + " You are not allowed to use this function."
         await msg.reply(embed = denied_msg("Admin Command", description))
         return None
     if len(args) < 4:
-        description = msg.author.mention + "\n"
+        description = msg.author.mention + " `" + usage() + "`"
         await msg.reply(embed = denied_msg("Command Format Error", description))
         return None
 
