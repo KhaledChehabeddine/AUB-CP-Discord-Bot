@@ -108,5 +108,3 @@ async def my_background_task__Role_Management():
 
 client.loop.create_task(my_background_task__Role_Management())
 client.run(config['token'])
-
-# extra changes
