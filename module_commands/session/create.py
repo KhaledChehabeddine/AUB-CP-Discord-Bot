@@ -16,14 +16,14 @@ def is_admin_only(): return True
 
 # ------------------ [ usage() ] ------------------ #
     # Returns how the command is called ex. "[prefix][command]"
-def usage(): return prefix + file + " [date] [time] [duration] [topic] (description)"
+def usage(): return  file + " [date] [time] [duration] [topic] (description)"
 
 # ------------------ [ description() ] ------------------ #
     # Returns a short explanation of what the function does
 def description(): return "```fix\nCreates a session and announces it to the server```"
 
 # ------------------ [ check_args() ] ------------------ #
-    # 
+    # Checks if the command called by the user is valid
 async def check_args(msg, args):
     author = User(id = str(msg.author.id))
     if not author.is_admin():
@@ -58,7 +58,9 @@ async def check_args(msg, args):
     return session
 
 # ------------------ [ execute() ] ------------------ #
-    # 
+    # Creates a session object and stores it into the database
+    # Creates and sends an embed message to "channel" containing session info 
+    # Throws an exception if any error occurs, logs it with "elog" and sends "denied_msg"
 async def execute(msg, args, client):
     try:
         session = await check_args(msg, args)
