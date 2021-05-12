@@ -49,7 +49,7 @@ async def check_args(msg, args):
         return None  
 
     if len(args) == 4: session = Session(start_date, session_duration, args[3], msg.author.name)
-    else: session = Session(start_date, session_duration, args[3], msg.author.name, args[4])
+    else: session = Session(start_date, session_duration, args[3], msg.author.name, " ".join(args[4:]))
 
     if session.is_found():
         description = msg.author.mention + " This session already exists"
@@ -75,14 +75,15 @@ async def execute(msg, args, client):
         )
         response.add_field(
             name = "Topic:", 
-            value = "```fix\n" + session.topic + "```", 
+            value = "```ini\n" + session.topic + "```", 
             inline = False
         )
-        response.add_field(
-            name = "Description:", 
-            value = "```diff\n" + session.desc + "```", 
-            inline = False
-        )
+        if (session.desc != "-"):
+            response.add_field(
+                name = "Description:", 
+                value = "```bash\n" + session.desc + "```", 
+                inline = False
+            )
         response.add_field(
             name = "Host:",
             value = "```fix\n" + session.host + "```",

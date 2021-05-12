@@ -11,11 +11,13 @@ class Session:
 
     def __init__(self, date, duration, topic, host, desc = "", _id = -1):
         if _id == -1:
+            description = desc.split(" ")
+            description = ["\"" + x + "\"" for x in description]
             self._date = date
             self.duration = duration
-            self.topic = topic
+            self.topic = "[" + topic + "]"
             self.host = host
-            self.desc = desc
+            self.desc = "\n".join(description)
         else:
             self._id = _id
             self.fill_values()
@@ -36,7 +38,7 @@ class Session:
 
     def is_found(self): 
         for session in database_session.values():
-            if (session['date'] == self._date 
+            if (session['date'] == str(self._date) 
                 and session['duration'] == self.duration 
                 and session['topic'] == self.topic
                 and session['host'] == self.host
