@@ -11,7 +11,7 @@ class Session:
 
     def __init__(self, date, duration, topic, host, desc = "", _id = -1):
         if _id == -1:
-            self._date = date
+            self._date = str(date)
             self.duration = duration
             self.topic = topic
             self.host = host
@@ -36,12 +36,11 @@ class Session:
 
     def is_found(self): 
         for session in database_session.values():
-            if (session.date == self.date 
-                and session.duration == self.duration 
-                and session.topic == self.topic
-                and session.host == self.host
-                and session.desc == self.desc
-                and session._id == self._id): return True
+            if (session['date'] == self._date 
+                and session['duration'] == self.duration 
+                and session['topic'] == self.topic
+                and session['host'] == self.host
+                and session['desc'] == self.desc): return True
         return False
 
     def __str__(self): return "ACM Session: " + self.topic + " | " + str(self.date)

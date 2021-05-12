@@ -62,7 +62,7 @@ async def execute(msg, args, client):
         session = await check_args(msg, args)
         if (session == None): return
 
-        #session_id = session.create()
+        session_id = session.create()
         alog(str(msg.author.id) + " created a session")
 
         response = granted_msg("ACM Session", "")

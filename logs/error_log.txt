@@ -1,2 +1,0 @@
-05/12/2021 at 13:58 GitHub/KFC-Bot/commands/session.py CALL execute() ERROR-MSG add_field() got an unexpected keyword argument 'intline'
-05/12/2021 at 13:59 GitHub/KFC-Bot/commands/session.py CALL execute() ERROR-MSG 'active_tag'
