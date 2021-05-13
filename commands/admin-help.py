@@ -79,7 +79,7 @@ async def execute(msg, args, client):
 
         response = granted_msg("Admin Commands")
         for cmd in available_commands:
-            if available_commands[cmd].is_admin_only(): continue
+            if not available_commands[cmd].is_admin_only(): continue
             response.add_field(
                 name = available_commands[cmd].usage(), 
                 value = available_commands[cmd].description(), 
