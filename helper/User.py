@@ -21,9 +21,9 @@ class User:
             self.id, self.handle = str(id), handle
         elif (id != ''):
             self.id = str(id)
-            self.handle = database_users.find_handle(id)
+            self.handle = database_users.find_handle(self.id)
         elif (handle != ''): 
-            self.id = str(database_users.find_id(handle))
+            self.id = str(database_users.find_id(self.handle))
             self.handle = handle
         self.client = client
 
