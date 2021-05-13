@@ -49,19 +49,24 @@ async def execute(msg, args, client):
     try:
         if len(available_commands) == 0: init()
 
-        response = granted_msg("Bot Modules")
-        for module in available_modules:
-            module_msg = ""
+        response = granted_msg(" ")
+
+        module_msg = ""
+        for module in available_modules.keys():
+            flag = False
             for cmd in available_modules[module].keys():
                 if available_modules[module][cmd].is_admin_only(): continue
-                module_msg += cmd + "\n"
-            if len(module_msg) == 0: continue
+                flag = True
+                break
+            if flag: module_msg += "- " + module + "\n"
+
+        if len(module_msg) != 0:
             response.add_field(
-                name = module, 
-                value = "```\n" + module_msg + "\n```", 
-                inline = True
+                name = 'Bot Modules', 
+                value = "```diff\n" + module_msg + "\n```", 
+                inline = False
             )
-        await msg.channel.send(embed = response)
+            await msg.channel.send(embed = response)
 
         response = granted_msg("Bot Commands")
         for cmd in available_commands:
