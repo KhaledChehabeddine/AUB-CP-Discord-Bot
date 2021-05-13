@@ -12,7 +12,9 @@ from helper.CF_API import CF_API
 
 config = json.load(open('config.json', 'r'))
 prefix = config['prefix']
-client = discord.Client()
+
+client = discord.Client(intents= discord.Intents.all())
+
 available_commands = dict()
 available_modules = dict() # dict of dicts
 db_users = DB_Users('db_users')
@@ -84,6 +86,29 @@ async def on_message(msg):
         elog(ex, inspect.stack()) 
         await msg.reply(embed = denied_msg())
 
+@client.event
+async def on_member_join(member):
+    channel = discord.DMChannel
+    await channel.send(member, "rules + ask for handle") 
+
+    def is_valid(response):
+        handle = response.content
+        return cf_api.is_valid_handle(handle) and not User(handle= handle).is_taken_handle()
+
+    try:
+        msg = await client.wait_for('message', check=is_valid, timeout=60.0)
+        user = User(id= msg.author.id, handle= msg.content, client= client)
+
+        if user.is_taken_id(): user.change_handle(msg.content)
+        else: user.register()
+
+        await user.update_roles()
+    except asyncio.TimeoutError:
+        await channel.send(member, 'Sorry, you took too long')
+        return
+
+    await channel.send(member, 'Hello {.author}!'.format(msg))
+
 # ------------------ [ my_background_task__Role_Management() ] ------------------ #
     # Runs after the bot becomes online
     # Checks that each user in the user database of the bot has the correct role
@@ -98,12 +123,7 @@ async def my_background_task__Role_Management():
         for (user_id, user_handle) in db_users.items():
             await asyncio.sleep(5)
             user = User(id = user_id, handle = user_handle, client = client)
-            rank = cf_api.user_rank(user)
-            if await user.has_role(rank): continue
-            lst = await user.get_different_roles(rank)
-            for r in lst:
-                await user.remove_role(r)
-            await user.add_role(rank)
+            await user.update_roles()
         await asyncio.sleep(3 * 60 * 60)
 
 client.loop.create_task(my_background_task__Role_Management())
