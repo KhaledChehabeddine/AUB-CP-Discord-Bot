@@ -100,7 +100,7 @@ async def on_member_join(member):
         return cf_api.is_valid_handle(handle) and not User(handle= handle).is_taken_handle()
 
     try:
-        msg = await client.wait_for('message', check=is_valid, timeout=60.0)
+        msg = await client.wait_for('message', check= is_valid, timeout= 60.0)
         user = User(id= msg.author.id, handle= msg.content, client= client)
 
         if user.is_taken_id(): user.change_handle(msg.content)
