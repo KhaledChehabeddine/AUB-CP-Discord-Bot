@@ -108,3 +108,10 @@ class CF_API():
         if (rating < 2600): return "Grandmaster"
         if (rating < 2900): return "International Grandmaster"
         return "Legendary Grandmaster"
+
+    def is_valid_handle(self, handle):
+        try:
+            self.user_rating(handle)
+            return True
+        except Exception:
+            return False

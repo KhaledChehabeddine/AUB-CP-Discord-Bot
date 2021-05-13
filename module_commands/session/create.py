@@ -16,7 +16,7 @@ def is_admin_only(): return True
 
 # ------------------ [ usage() ] ------------------ #
     # Returns how the command is called ex. "[prefix][command]"
-def usage(): return  file + " [date] [time] [duration] [topic] (description)"
+def usage(): return  file + " [mm/dd/yyyy] [hh:mm] [duration] [topic] (description)"
 
 # ------------------ [ description() ] ------------------ #
     # Returns a short explanation of what the function does
@@ -31,7 +31,7 @@ async def check_args(msg, args):
         await msg.reply(embed = denied_msg("Admin Command", description))
         return None
     if len(args) < 4:
-        description = msg.author.mention + "\n"
+        description = msg.author.mention + " `" + usage() + "`"
         await msg.reply(embed = denied_msg("Command Format Error", description))
         return None
 

@@ -30,7 +30,7 @@ def denied_msg(
     )
     response.description = desc
     response.set_footer(
-        text = "KFC Bot • " + MyDate().footer(),
+        text = "CodeX • " + MyDate().footer(),
         icon_url = icon_url
     )
     return response
