@@ -62,16 +62,16 @@ async def on_ready():
 async def on_message(msg):
     try:
         if msg.content[:len(prefix)] != prefix or msg.author.bot: return
-        if not User(id= msg.author.id).is_registered(): 
-            await msg.reply(embed = denied_msg("Error", "You are not registered yet"))
-            return
-
         args = msg.content[len(prefix):].split()
 
         if (len(args) == 0): return
         command = args[0]
 
         if command in available_commands.keys(): 
+            if command != "register" and not User(id= msg.author.id).is_registered():
+                desc = "You are not registered yet.\nUse `" + prefix + "register [YOUR_HANDLE]`"
+                await msg.reply(embed = denied_msg("Error", desc))
+                return
             await available_commands[command].execute(msg, args[1:], client)
             return
 
