@@ -1,4 +1,1 @@
-05/12/2021 at 19:59  CALL execute() ERROR-MSG 400 Bad Request (error code: 50035): Invalid Form Body
-In embed.fields.3.value: This field is required
-In embed.fields.5.value: This field is required
-05/13/2021 at 09:12  CALL execute() ERROR-MSG list indices must be integers or slices, not str
+05/14/2021 at 11:32  CALL execute() ERROR-MSG tuple expected at most 1 argument, got 2

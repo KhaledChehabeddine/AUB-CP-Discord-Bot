@@ -1,4 +1,4 @@
-import codeforces_api, requests, re
+import codeforces_api, requests, re, time
 from cDatabase.DB_Users import DB_Users
 from helper.cTime import get_in_date_format
 
@@ -115,3 +115,12 @@ class CF_API():
             return True
         except Exception:
             return False
+
+    def multiple_user_ratings(self, lst):
+        arr = []
+
+        for i in range(len(lst)):
+            if i != 0 and i % 5 == 0: time.sleep(0.2)
+            arr.append((lst[i], self.user_rating(lst[i])))
+
+        return arr

@@ -1,0 +1,1 @@
+def is_admin_only(): return True
