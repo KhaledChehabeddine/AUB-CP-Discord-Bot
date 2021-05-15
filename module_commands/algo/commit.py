@@ -3,6 +3,7 @@ from helper.User import User
 from helper.cEmbed import granted_msg, denied_msg
 from helper.GitHub import GitHub
 from helper.cLog import elog
+from cDatabase.DB_Algorithm import DB_Algorithm
 
 config = json.load(open('config.json', 'r'))
 
@@ -10,6 +11,7 @@ path = __file__.split(config['split_path'])
 file = path[len(path) - 1][:-3]
 
 github_api = GitHub()
+db_algo = DB_Algorithm('db_algorithm')
 
 # ------------------ [ is_admin_only() ] ------------------ #
     # Limits this command to only admin users (i.e. Ahmad, Khaled, MB, Miguel)
@@ -40,11 +42,16 @@ async def check_args(msg, args):
 
     algorithm, language, code_language, code = args[0], args[1], args[2], args[3]
 
-    # check if language is valid
-    # check if algorithm already exists
+    if language not in ['cpp', 'java', 'py']:
+        await msg.reply(embed = denied_msg("Invalid Language", "Try one of `cpp`, `java`, `py`"))
+        return False
 
     if language != code_language:
         await msg.reply(embed = denied_msg("Invalid Code Spinnet", ""))
+        return False
+
+    if db_algo.find_algo(algorithm, language):
+        await msg.reply(embed = denied_msg("Error", "Algorithm already exists in this language"))
         return False
 
     return args
@@ -54,7 +61,7 @@ async def execute(msg, args, client):
         args = await check_args(msg, args)
         if args == False: return
 
-        # add algo to database
+        db_algo.add_algo(args[0], args[1])
 
         filename = args[0] + '.' + args[1]
         code = args[3]
