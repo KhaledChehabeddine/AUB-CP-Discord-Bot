@@ -1,1 +1,1 @@
-DataBase = {'bfs': ['cpp', 'py', 'java'], 'closest-pair': ['cpp'], 'dfs': ['cpp'], 'dsu': ['cpp']}
+DataBase = {'bfs': ['cpp'], 'closest-pair': ['cpp'], 'dfs': ['cpp'], 'dsu': ['cpp']}
