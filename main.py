@@ -84,6 +84,7 @@ async def on_message(msg):
             command = args[1]
             if not command in available_modules[module].keys(): return
             if command in ["help", "admin-help"]: await available_modules[module][command].execute(msg, args[2:], client, module)
+            elif command in ["commit"]: await available_modules[module][command].execute(msg, msg.content[len(prefix):].split('\n'), client)
             else: await available_modules[module][command].execute(msg, args[2:], client)
 
     except Exception as ex:
@@ -131,4 +132,4 @@ async def my_background_task__Role_Management():
         await asyncio.sleep(3 * 60 * 60)
 
 client.loop.create_task(my_background_task__Role_Management())
-client.run(config['token'])
+client.run(config['Discord_Token'])
