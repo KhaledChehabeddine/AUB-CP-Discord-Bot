@@ -15,6 +15,11 @@ class GitHub():
         self.username, self.repository, self.branch = username, repository, branch
         self.path += username + "/" + repository + "/" + branch + "/"
 
+    def init_api(self):
+        if self.GitHub_Client == None: self.GitHub_Client = Github(config['GitHub_Token'])
+        if self.GitHub_Repo == None: 
+            self.GitHub_Repo = self.GitHub_Client.get_repo(self.username + "/" + self.repository)
+
     def get_file(self, filename):
         try:
             url = self.path + filename
@@ -24,11 +29,21 @@ class GitHub():
 
     def add_file(self, filename, code):
         try:
-            if self.GitHub_Client == None: self.GitHub_Client = Github(config['GitHub_Token'])
-            if self.GitHub_Repo == None: 
-                self.GitHub_Repo = self.GitHub_Client.get_repo(self.username + "/" + self.repository)
-
+            self.init_api()
             self.GitHub_Repo.create_file(filename, "API Created " + filename, code, branch= self.branch)
             return True
         except Exception as ex:
             return ex
+
+    def get_all_files(self):
+        self.init_api()
+
+        lst = []
+        
+        contents = self.GitHub_Repo.get_contents("")
+        while contents:
+            file_content = contents.pop(0)
+            if file_content.type == "dir": contents.extend(self.GitHub_Repo.get_contents(file_content.path))
+            else: lst.append(file_content.path)
+
+        return lst

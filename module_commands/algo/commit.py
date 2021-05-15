@@ -11,7 +11,7 @@ path = __file__.split(config['split_path'])
 file = path[len(path) - 1][:-3]
 
 github_api = GitHub()
-db_algo = DB_Algorithm('db_algorithm')
+db_algo = DB_Algorithm('db_algorithms')
 
 # ------------------ [ is_admin_only() ] ------------------ #
     # Limits this command to only admin users (i.e. Ahmad, Khaled, MB, Miguel)

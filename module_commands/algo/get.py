@@ -9,7 +9,7 @@ config = json.load(open('config.json', 'r'))
 path = __file__.split(config['split_path'])
 file = path[len(path) - 1][:-3]
 
-db_algo = DB_Algorithm('db_algorithm')
+db_algo = DB_Algorithm('db_algorithms')
 github_api = GitHub()
 
 # ------------------ [ is_admin_only() ] ------------------ #
