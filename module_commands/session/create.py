@@ -4,11 +4,14 @@ from helper.cTime import MyDate
 from helper.cLog import elog, alog
 from helper.Session import Session
 from helper.cEmbed import granted_msg, denied_msg
+from cDatabase.DB_Settings import DB_Settings
 
 config = json.load(open('config.json', 'r'))
-prefix = config['prefix']
+
 path = __file__.split(config['split_path'])
 file = path[len(path) - 1][:-3]
+
+db_settings = DB_Settings('db_settings')
 
 # ------------------ [ is_admin_only() ] ------------------ #
     # Limits this command to only admin users (i.e. Ahmad, Khaled, MB, Miguel)
@@ -91,10 +94,10 @@ async def execute(msg, args, client):
                 value = "```bash\n" + session.desc + "```", 
                 inline = False
             )
-        channel = client.get_channel(config['general_channel'])
-        await channel.send(config['active_tag'])
+        channel = client.get_channel(db_settings.get_default_channel(msg.guild))
+        await channel.send(db_settings.get_active_tag(msg.guild))
         await channel.send(embed = response)
-        if msg.channel.id != config['general_channel']:
+        if msg.channel.id != db_settings.get_default_channel(msg.guild):
             await msg.reply(embed = granted_msg("Session created successfully", ""))
     except Exception as ex:
         elog(ex, inspect.stack())

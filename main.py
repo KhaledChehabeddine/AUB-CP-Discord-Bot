@@ -11,9 +11,9 @@ from cDatabase.DB_Users import DB_Users
 from helper.GitHub import GitHub
 from helper.CF_API import CF_API
 from cDatabase.DB_Algorithm import DB_Algorithm
+from cDatabase.DB_Settings import DB_Settings
 
 config = json.load(open('config.json', 'r'))
-prefix = config['prefix']
 
 client = discord.Client(intents= discord.Intents.all())
 
@@ -21,6 +21,7 @@ available_commands = dict()
 available_modules = dict() # dict of dicts
 db_users = DB_Users('db_users')
 db_algo = DB_Algorithm('db_algorithms')
+db_settings = DB_Settings('db_settings')
 cf_api = CF_API()
 github_api = GitHub()
 
@@ -67,7 +68,7 @@ def init():
 @client.event
 async def on_ready(): 
     init()
-    await client.change_presence(activity = discord.Game(prefix + "help"))
+    await client.change_presence(activity = discord.Game(config['default_prefix'] + "help"))
     #await client.change_presence(status = discord.Status.offline)
     print("Bot online.")
 
@@ -80,6 +81,8 @@ async def on_ready():
 @client.event
 async def on_message(msg):
     try:
+        prefix = db_settings.get_prefix(msg.guild)
+
         if msg.content[:len(prefix)] != prefix or msg.author.bot: return
         args = msg.content[len(prefix):].split()
 
@@ -149,6 +152,8 @@ async def my_background_task__Role_Management():
             user = User(id = user_id, handle = user_handle, client = client)
             await user.update_roles()
         await asyncio.sleep(3 * 60 * 60)
+
+# Initialize db_setting on_guild_join
 
 client.loop.create_task(my_background_task__Role_Management())
 client.run(config['Discord_Token'])

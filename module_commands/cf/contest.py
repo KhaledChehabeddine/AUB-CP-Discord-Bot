@@ -4,7 +4,6 @@ from helper.CF_API import CF_API
 import inspect, json
 
 config = json.load(open('config.json', 'r'))
-prefix = config['prefix']
 
 cf_api = CF_API()
 

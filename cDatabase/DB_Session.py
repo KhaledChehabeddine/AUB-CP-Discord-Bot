@@ -1,8 +1,6 @@
 import json
 from cDatabase.KV_Database import KV_Database
 
-config = json.load(open('config.json', 'r'))
-
 class DB_Session(KV_Database):
     def __init__(self, path): super().__init__(path)
 

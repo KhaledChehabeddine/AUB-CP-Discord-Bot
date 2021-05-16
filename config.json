@@ -1,5 +1,5 @@
 {
-    "prefix": ">",
+    "default_prefix": ">",
 	  "Discord_Token": "ODA5NzYyMTgxMDI5NjkxMzky.YCZzzA.kqbCgSypSh_QERmf9Jjf1cElRRo",
     "GitHub_Token": "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",
     "general_channel": 818816445789110282,
@@ -9,5 +9,5 @@
     "version": "1.0.0.0",
     "cmds_loc": "./commands",
     "module_cmds_loc": "./module_commands",
-    "active_tag": "everyone"
+    "default_active_tag": "everyone"
 }

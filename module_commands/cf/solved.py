@@ -5,7 +5,6 @@ from helper.User import User
 from helper.CF_API import CF_API
 
 config = json.load(open('config.json', 'r'))
-prefix = config['prefix']
 
 path = __file__.split(config['split_path'])
 file = path[len(path) - 1][:-3]
