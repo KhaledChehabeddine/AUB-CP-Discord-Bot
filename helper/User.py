@@ -1,10 +1,12 @@
 import json, discord
 from cDatabase.DB_Users import DB_Users
 from cDatabase.KV_Database import KV_Database
+from helper.CF_API import CF_API
 
 config = json.load(open('config.json', 'r'))
 database_users = DB_Users("db_users")
 cf_ranking = KV_Database('CodeForces_Ranking')
+cf_api = CF_API()
 
 # ------------------------------------ { User } ------------------------------------ # 
 class User:
@@ -16,12 +18,12 @@ class User:
         # Initializes id and handle based on given parameters
     def __init__(self, id = '', handle = '', client = None):
         if (id != '' and handle != ''):
-            self.id, self.handle = id, handle
+            self.id, self.handle = str(id), handle
         elif (id != ''):
-            self.id = id
-            self.handle = database_users.find_handle(id)
+            self.id = str(id)
+            self.handle = database_users.find_handle(self.id)
         elif (handle != ''): 
-            self.id = database_users.find_id(handle)
+            self.id = str(database_users.find_id(self.handle))
             self.handle = handle
         self.client = client
 
@@ -133,3 +135,9 @@ class User:
             lst.append(r.name)
 
         return lst
+
+    async def update_roles(self):
+        rank = cf_api.user_rank(self)
+        lst = await self.get_different_roles(rank)
+        for r in lst: await self.remove_role(r)
+        await self.add_role(rank)

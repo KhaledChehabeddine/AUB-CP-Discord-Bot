@@ -1,11 +1,14 @@
 import inspect, json
 from helper.cLog import elog
 from helper.cEmbed import granted_msg, denied_msg
+from cDatabase.DB_Settings import DB_Settings
 
 config = json.load(open('config.json', 'r'))
-prefix = config['prefix']
+
 path = __file__.split(config['split_path'])
 file = path[len(path) - 1][:-3]
+
+db_settings = DB_Settings('db_settings')
 
 # ------------------ [ is_admin_only() ] ------------------ #
     # Anybody can use this command
@@ -13,7 +16,7 @@ def is_admin_only(): return False
 
 # ------------------ [ usage() ] ------------------ #
     # Returns how the command is called ex. "[prefix][command]"
-def usage(): return prefix + file
+def usage(): return file
 
 # ------------------ [ description() ] ------------------ #
     # Returns a short explanation of what the function does
@@ -39,12 +42,27 @@ async def execute(msg, args, client):
         response.add_field(
             name = "Region", 
             value = str(msg.guild.region), 
-            inline = False
+            inline = True
         )
         response.add_field(
             name = "Member Count", 
             value = str(msg.guild.member_count), 
+            inline = True
+        )
+        response.add_field(
+            name = "Prefix", 
+            value = db_settings.get_prefix(msg.guild), 
             inline = False
+        )
+        response.add_field(
+            name = "Default Channel", 
+            value = client.get_channel(db_settings.get_default_channel(msg.guild)).mention, 
+            inline = True
+        )
+        response.add_field(
+            name = "Active Tag", 
+            value = db_settings.get_active_tag(msg.guild), 
+            inline = True
         )
         await msg.channel.send(embed = response)
     except Exception as ex:

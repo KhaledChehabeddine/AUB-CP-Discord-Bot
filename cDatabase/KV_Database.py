@@ -66,3 +66,7 @@ class KV_Database:
         file.write("DataBase = ")
         file.write(str(self.db))
         file.close()
+
+    def clear(self):
+        self.db = {}
+        self.save()

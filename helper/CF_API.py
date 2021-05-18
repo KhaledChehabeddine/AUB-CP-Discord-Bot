@@ -1,4 +1,4 @@
-import codeforces_api, requests, re
+import codeforces_api, requests, re, time
 from cDatabase.DB_Users import DB_Users
 from helper.cTime import get_in_date_format
 
@@ -108,3 +108,48 @@ class CF_API():
         if (rating < 2600): return "Grandmaster"
         if (rating < 2900): return "International Grandmaster"
         return "Legendary Grandmaster"
+
+    def is_valid_handle(self, handle):
+        try:
+            self.user_rating(handle)
+            return True
+        except Exception:
+            return False
+
+    def multiple_user_ratings(self, lst):
+        arr = []
+
+        for i in range(len(lst)):
+            if i != 0 and i % 5 == 0: time.sleep(0.2)
+            arr.append((lst[i], self.user_rating(lst[i])))
+
+        return arr
+
+    def codeforces_contests(self):
+        response = requests.get("https://codeforces.com/contests")
+        result = [i.start() for i in re.finditer("table", response.text)]
+        if (len(result) < 8): return {}
+        x = response.text[result[6] : result[7]]
+
+        result = [i.start() for i in re.finditer("data-contestId=", x)]
+        lst = {}
+        for i in range(len(result)):
+            st = str()
+            if i + 1 < len(result): st = x[result[i] : result[i + 1]]
+            else: st = x[result[i]:]
+            arr = [i.start() for i in re.finditer('<td class="state">', st)]
+            st = st[ : arr[0]]
+
+            _id = st[16 : 20]
+
+            arr = [i.start() for i in re.finditer('td', st)]
+            name = st[arr[0] + 5 : arr[1] - 8]
+
+            duration = st[arr[len(arr) - 2] + 13 : arr[len(arr) - 1] - 8] 
+
+            arr = [i.start() for i in re.finditer('data-locale', st)]
+            time = get_in_date_format(st[arr[0] + 17 : arr[0] + 34])
+
+            lst[_id] = {'name': name, 'date': time, 'duration': duration}
+
+        return lst
