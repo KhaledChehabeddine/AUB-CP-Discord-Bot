@@ -4,9 +4,28 @@ from cDatabase.KV_Database import KV_Database
 config = json.load(open('config.json', 'r'))
 
 class DB_Session(KV_Database):
-    def __init__(self, path): super().__init__(path)
+    """[summary]
+
+    Args:
+        KV_Database ([type]): [description]
+    """
+    def __init__(self, path): 
+        """[summary]
+
+        Args:
+            path ([type]): [description]
+        """
+        super().__init__(path)
 
     def create(self, session):
+        """[summary]
+
+        Args:
+            session ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
         session_id = max(list(self.db.keys()) + [0]) + 1
         self.db[session_id] = {
             'date': str(session._date), 
@@ -19,11 +38,25 @@ class DB_Session(KV_Database):
         return session_id
 
     def delete(self, session):
+        """[summary]
+
+        Args:
+            session ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
         del(self.db[session._id])
         self.save()
         return True
 
     def change(self, session1, session2):
+        """[summary]
+
+        Args:
+            session1 ([type]): [description]
+            session2 ([type]): [description]
+        """
         info = self.get(self._id)
         session1._date = session2._date
         session1.duration = session2.duration

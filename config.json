@@ -7,5 +7,6 @@
     "split_path": "/",
     "version": "1.0.0.0",
     "cmds_loc": "./commands",
+    "session_module": "./module_commands",
     "active_tag": "everyone"
 }
