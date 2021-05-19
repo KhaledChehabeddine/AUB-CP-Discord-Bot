@@ -47,3 +47,12 @@ class GitHub():
             else: lst.append(file_content.path)
 
         return lst
+
+    def delete_file(self, filename):
+        try:
+            self.init_api()
+
+            contents = self.GitHub_Repo.get_contents(filename)
+            self.GitHub_Repo.delete_file(contents.path, "API Deleted " + filename, contents.sha, branch= self.branch)
+        except Exception as ex:
+            return ex

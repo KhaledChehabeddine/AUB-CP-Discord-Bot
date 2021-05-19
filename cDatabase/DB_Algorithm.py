@@ -22,3 +22,11 @@ class DB_Algorithm(KV_Database):
         self.save()
 
         return True
+
+    def del_algo(self, algorithm, language):
+        algorithm = algorithm.lower()
+        language = language.lower()
+
+        self.db[algorithm].remove(language)
+        if len(self.db[algorithm]) == 0: self.delete_key(algorithm)
+        self.save()

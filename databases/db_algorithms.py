@@ -1,1 +1,1 @@
-DataBase = {'bfs': ['cpp'], 'closest-pair': ['cpp'], 'dfs': ['cpp'], 'dsu': ['cpp']}
+DataBase = {'binary-search-tree': ['java', 'cpp'], 'doubly-linked-list': ['java'], 'heap-priority-queue': ['java'], 'linked-binary-tree': ['java'], 'priority-queue': ['java'], 'singly-linked-list': ['java'], 'bfs': ['cpp'], 'closest-pair': ['cpp'], 'dfs': ['cpp'], 'dsu': ['cpp']}

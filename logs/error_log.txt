@@ -1,0 +1,2 @@
+05/19/2021 at 15:02  CALL execute() ERROR-MSG object of type 'bool' has no len()
+05/19/2021 at 15:03  CALL execute() ERROR-MSG 'dict' object has no attribute 'delete_key'
