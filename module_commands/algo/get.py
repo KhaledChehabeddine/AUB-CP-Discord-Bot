@@ -40,7 +40,7 @@ async def check_args(msg, args):
         await msg.reply(embed = denied_msg("Error", "Algorithm is not available yet."))
         return False
 
-    return [algorithm, language]
+    return [algorithm.lower(), language.lower()]
 
 async def execute(msg, args, client):
     try:
