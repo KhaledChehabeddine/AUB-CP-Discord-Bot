@@ -19,7 +19,7 @@ def is_admin_only(): return True
 
 # ------------------ [ usage() ] ------------------ #
     # Returns how the command is called ex. "[prefix][command]"
-def usage(): return  file + " [algorithm] (language) CONFIRM"
+def usage(): return  file + " [algorithm] [language] [confimartion_key]"
 
 # ------------------ [ description() ] ------------------ #
     # Returns a short explanation of what the function does
@@ -40,7 +40,7 @@ async def check_args(msg, args):
 
     algorithm, language, key = args[0], args[1], args[2]
 
-    if key != "CONFIRM":
+    if key != config['confirmation_key']:
         await msg.reply(embed = denied_msg("Invalid Confirmation Key", ""))
         return False
 
