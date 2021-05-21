@@ -26,12 +26,25 @@ def description():
 
 async def valid_handle(msg, handle1, handle2):
     try:
+        await msg.channel.send("Gathering info for `" + handle1 + "`")
+        mp1 = cf_api.get_statistics(handle1)
+        await msg.channel.send("Gathering info for `" + handle2 + "`")
+        mp2 = cf_api.get_statistics(handle2)
+
+        keys, col1, col2 = "", "", ""
+        for (k, v) in mp1.items(): 
+            keys += k + "\n"
+            col1 += (v if v != None else "--") + "\n"
+            col2 += (mp2[k] if mp2[k] != None else "--") + "\n"
+
         response = granted_msg("`" + handle1 + "` vs `" + handle2 + "`")
         base = "https://cfviz.netlify.app/compare.html"
         req = "?handle1=" + handle1 + "&handle2=" + handle2
         response.url = base + req
-
-        await msg.channel.send(base + req)
+        
+        response.add_field(name= '\u200b', value= keys, inline= True)
+        response.add_field(name= handle1, value= col1, inline= True)
+        response.add_field(name= handle2, value= col2, inline= True)
   
         await msg.channel.send(embed = response)
     except Exception as ex:
