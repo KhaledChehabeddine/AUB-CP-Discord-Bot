@@ -34,11 +34,27 @@ async def check_args(msg, args):
         await msg.reply(embed = denied_msg("Admin Command", description))
         return False
 
-    args = args[0].split()[2:] + [args[1].strip('`')] + ['\n'.join(args[2 : len(args) - 1])]
 
-    if len(args) != 4:
+    if ((len(msg.attachments) == 0 and (len(args) < 4 or len(args[0].split()) != 4))
+        or (len(msg.attachments) == 1 and (len(args) != 1 or len(args[0].split()) != 4))):
         await msg.reply(embed = denied_msg("Invalid Command Format", usage()))
         return False
+
+    if len(msg.attachments) != 0: 
+        file_path = config['module_cmds_loc'] + "/algo/code.txt"
+        await msg.attachments[0].save(file_path)
+        
+        fs = open(file_path, "r")
+        code = fs.read()
+        fs.close()
+        fs = open(file_path, "w")
+        fs.write("") 
+        fs.close()
+
+        language = msg.attachments[0].filename.split(".")[-1]
+        args = args[0].split()[2:] + [language, code]
+    else: 
+        args = args[0].split()[2:] + [args[1].strip('`')] + ['\n'.join(args[2 : -1])]
 
     algorithm, language, code_language, code = args[0], args[1], args[2], args[3]
 

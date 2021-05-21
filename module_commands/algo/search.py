@@ -33,8 +33,8 @@ async def execute(msg, args, client):
         algorithms, languages = str(), str()
 
         for (algo, lang_lst) in db_algo.items():
-            if keyword not in algo: continue
             if language != None and language not in lang_lst: continue
+            if not db_algo.is_valid_mapping(algo, keyword): continue
             algorithms += algo + "\n"
             languages += str(lang_lst) + "\n"
 

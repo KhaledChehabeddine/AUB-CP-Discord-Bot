@@ -9,5 +9,6 @@
     "version": "1.0.0.0",
     "cmds_loc": "./commands",
     "module_cmds_loc": "./module_commands",
-    "default_active_tag": "everyone"
+    "default_active_tag": "everyone",
+    "confirmation_key": "CONFIRM"
 }
