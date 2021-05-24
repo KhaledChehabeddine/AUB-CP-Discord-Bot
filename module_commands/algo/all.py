@@ -1,4 +1,4 @@
-import json, inspect, discord
+import json, inspect, discord, asyncio
 from helper.cEmbed import granted_msg, denied_msg
 from helper.cLog import elog
 from cDatabase.DB_Algorithm import DB_Algorithm
@@ -22,32 +22,69 @@ def usage(): return file
     # Returns a short explanation of what the function does
 def description(): return "Displays All Currently Available Algorithms"
 
+def get_new_msg(curr_page, lst_algorithms, lst_languages):
+    response = granted_msg("Available Algorithms", f"Page {curr_page + 1}/{len(lst_algorithms)}")
+    response.add_field(name = "Algorithm", value = lst_algorithms[curr_page], inline = True)
+    response.add_field(name = "Languages", value = lst_languages[curr_page], inline = True)
+    return response
+
+async def pages(msg, lst_algorithms, lst_languages, client):
+    pages = len(lst_algorithms)
+    curr_page = 0
+
+    bot_msg = await msg.channel.send(embed = get_new_msg(curr_page, lst_algorithms, lst_languages))
+
+    await bot_msg.add_reaction("◀️")
+    await bot_msg.add_reaction("▶️")
+    
+
+    def check(reaction, user):
+        return user == msg.author and str(reaction.emoji) in ["◀️", "▶️"]
+
+    while True:
+        try:
+            reaction, user = await client.wait_for("reaction_add", timeout= 60, check= check)
+
+            if str(reaction.emoji) == "▶️" and curr_page + 1 != pages:
+                curr_page += 1
+                await bot_msg.edit(embed = get_new_msg(curr_page, lst_algorithms, lst_languages))
+                await bot_msg.remove_reaction(reaction, user)
+            
+            elif str(reaction.emoji) == "◀️" and curr_page > 0:
+                curr_page -= 1
+                await bot_msg.edit(embed = get_new_msg(curr_page, lst_algorithms, lst_languages))
+                await bot_msg.remove_reaction(reaction, user)
+            
+            else: await bot_msg.remove_reaction(reaction, user)
+
+        except asyncio.TimeoutError:
+            await bot_msg.clear_reactions()
+            break
+
 async def execute(msg, args, client):
     try:
-        algorithms, languages = str(), str()
+        str_algorithms, str_languages = str(), str()
+        lst_algorithms, lst_languages = list(), list()
 
-        for (algo, lang_lst) in db_algo.items():
-            algorithms += algo + "\n"
-            languages += str(lang_lst) + "\n"
+        arr = sorted(db_algo.items(), key= lambda x : x[0])
+        for i in range(len(arr)):
+            if i != 0 and i % 15 == 0:
+                lst_algorithms.append(str_algorithms)
+                lst_languages.append(str_languages)
+                str_algorithms = str_languages = ""
+            str_algorithms += arr[i][0] + "\n"
+            str_languages += str(sorted(arr[i][1])) + "\n"
 
-        if len(algorithms) == 0:
+        if len(str_algorithms) != 0:
+            lst_algorithms.append(str_algorithms)
+            lst_languages.append(str_languages)
+            str_algorithms = str_languages = ""
+
+        if len(lst_algorithms) == 0:
             await msg.reply(embed = denied_msg("No Available Algorithms Yet", ""))
             return
 
-        response = granted_msg("Available Algorithms")
-
-        response.add_field(
-            name = "Algorithm",
-            value = algorithms,
-            inline = True
-        )
-        response.add_field(
-            name = "Languages",
-            value = languages,
-            inline = True
-        )
-
-        await msg.channel.send(embed = response)
+        await pages(msg, lst_algorithms, lst_languages, client)
     
     except Exception as ex:
         elog(ex, inspect.stack()) 
