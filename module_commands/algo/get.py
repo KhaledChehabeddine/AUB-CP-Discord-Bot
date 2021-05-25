@@ -1,6 +1,7 @@
 import json, inspect, discord
 from helper.cEmbed import denied_msg
 from helper.cLog import elog
+from helper.Algorithm import Algorithm
 from cDatabase.DB_Algorithm import DB_Algorithm
 from helper.GitHub import GitHub
 
@@ -31,30 +32,37 @@ async def check_args(msg, args):
         await msg.reply(embed = denied_msg("Invalid Command Format", usage()))
         return False
 
-    algorithm = args[0]
+    if args[0] in db_algo.keys(): algo = Algorithm(_id= args[0])
+    else:
+        if args[0] not in db_algo.inv.keys():
+            await msg.reply(embed = denied_msg("Error", "Algorithm is not available."))
+            return False
+        else: algo = Algorithm(algo= args[0])
 
-    if len(args) == 1: language = "cpp"
-    else: language = args[1]
+    if len(args) == 1: algo.lang = "cpp"
+    else: algo.lang = args[1]
 
-    if not db_algo.find_algo(algorithm, language):
+    if not algo.is_found():
         await msg.reply(embed = denied_msg("Error", "Algorithm is not available yet."))
         return False
 
-    return [algorithm.lower(), language.lower()]
+    return algo
 
 async def execute(msg, args, client):
     try:
-        args = await check_args(msg, args)
-        if args == False : return
+        algo = await check_args(msg, args)
+        if algo == False : return
 
-        code = github_api.get_file(args[0] + "." + args[1])
+        # check the case where the file is a zip file
+
+        code = github_api.get_file(str(algo))
         file_path = config['module_cmds_loc'] + "/algo/code.txt"
 
         fs = open(file_path, "w")
         fs.write(code) 
         fs.close()
 
-        await msg.channel.send(file= discord.File(file_path, args[0] + "." + args[1]))
+        await msg.channel.send(file= discord.File(file_path, str(algo)))
 
         fs = open(file_path, "w")
         fs.write("") 

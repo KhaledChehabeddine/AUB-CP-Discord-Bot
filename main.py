@@ -7,6 +7,7 @@ import os, json, inspect, discord, asyncio, importlib
 from helper.cLog import elog
 from helper.cEmbed import denied_msg
 from helper.User import User
+from helper.Algorithm import Algorithm
 from cDatabase.DB_Users import DB_Users
 from helper.GitHub import GitHub
 from helper.CF_API import CF_API
@@ -43,11 +44,10 @@ def init_available_modules():
 
 def init_available_algorithms():
     algo_lst = github_api.get_all_files()
-    for algo in algo_lst:
-        algo = algo.split('.')
-        algorithm, language = algo[0], algo[1]
-        if language not in ['cpp', 'java', 'py']: continue
-        db_algo.add_algo(algorithm, language)
+    for algo in algo_lst: 
+        x = Algorithm(str_algo= algo)
+        if x.lang not in ['cpp', 'java', 'py']: continue
+        x.add()
 
 # ------------------ [ init() ] ------------------ #
     # Iterates over names in "folder" file of "config["cmds_loc"]"

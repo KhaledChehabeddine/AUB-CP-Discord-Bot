@@ -2,6 +2,7 @@ import json, inspect, discord
 from helper.cEmbed import denied_msg, granted_msg
 from helper.cLog import elog
 from helper.User import User
+from helper.Algorithm import Algorithm
 from cDatabase.DB_Algorithm import DB_Algorithm
 from helper.GitHub import GitHub
 
@@ -38,25 +39,29 @@ async def check_args(msg, args):
         await msg.reply(embed = denied_msg("Invalid Command Format", usage()))
         return False
 
-    algorithm, language, key = args[0], args[1], args[2]
+    if args[0] in db_algo.keys(): algo = Algorithm(_id= args[0], lang= args[1])
+    else: algo = Algorithm(algo= args[0], lang= args[1])
 
-    if key != config['confirmation_key']:
+    print(algo)
+    return False
+
+    if args[2] != config['confirmation_key']:
         await msg.reply(embed = denied_msg("Invalid Confirmation Key", ""))
         return False
 
-    if not db_algo.find_algo(algorithm, language):
+    if not algo.is_found():
         await msg.reply(embed = denied_msg("Error", "Algorithm is not available yet."))
         return False
 
-    return [algorithm, language]
+    return algo
 
 async def execute(msg, args, client):
     try:
-        args = await check_args(msg, args)
-        if args == False : return
+        algo = await check_args(msg, args)
+        if algo == False : return
 
-        github_api.delete_file(args[0] + "." + args[1])
-        db_algo.del_algo(args[0], args[1])
+        github_api.delete_file(str(algo))
+        algo.delete()
 
         await msg.channel.send(embed = granted_msg("Algorithm Deleted Successfully", ""))
     

@@ -1,3 +1,5 @@
-DataBase = {'bfs': ['cpp'], 'binary-search-tree': ['cpp', 'java'], 'closest-pair': ['cpp'], 'dfs': ['cpp'], 'doubly-linked-list': ['java'], 'dsu': ['cpp'], 'heap-priority-queue': ['java'], 'linked-binary-tree': ['java'], 'priority-queue': ['java'], 'singly-linked-list': ['java']}
+DataBase = {'00001': {'algo': 'binary-search-tree', 'lang_zip': {'cpp': False, 'java': False}}, '00002': {'algo': 'breadth-first-search', 'lang_zip': {'cpp': False}}, '00003': {'algo': 'closest-pair', 'lang_zip': {'cpp': False}}, '00004': {'algo': 'depth-first-search', 'lang_zip': {'cpp': False}}, '00005': {'algo': 'disjoint-set-union', 'lang_zip': {'cpp': False}}, '00006': {'algo': 'doubly-linked-list', 'lang_zip': {'java': False}}, '00007': {'algo': 'heap-priority-queue', 'lang_zip': {'java': False}}, '00008': {'algo': 'linked-binary-tree', 'lang_zip': {'java': False}}, '00009': {'algo': 'priority-queue', 'lang_zip': {'java': False}}, '00010': {'algo': 'singly-linked-list', 'lang_zip': {'java': False}}}
 
-Mapping = {'binary-search-tree': ['bst']}
+Mapping = {'00001': ['bst']}
+
+Inverse = {'binary-search-tree': '00001', 'breadth-first-search': '00002', 'closest-pair': '00003', 'depth-first-search': '00004', 'disjoint-set-union': '00005', 'doubly-linked-list': '00006', 'heap-priority-queue': '00007', 'linked-binary-tree': '00008', 'priority-queue': '00009', 'singly-linked-list': '00010'}

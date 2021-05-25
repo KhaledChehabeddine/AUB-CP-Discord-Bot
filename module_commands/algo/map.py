@@ -2,6 +2,7 @@ import json, inspect
 from helper.User import User
 from helper.cEmbed import granted_msg, denied_msg
 from helper.cLog import elog
+from helper.Algorithm import Algorithm
 from cDatabase.DB_Algorithm import DB_Algorithm
 
 config = json.load(open('config.json', 'r'))
@@ -32,22 +33,25 @@ async def check_args(msg, args):
         await msg.reply(embed = denied_msg("Admin Command", description))
         return False
 
-
     if len(args) != 2:
         await msg.reply(embed = denied_msg("Invalid Command Format", usage()))
         return False
 
-    if args[1] not in db_algo.keys():
-        await msg.reply(embed = denied_msg("Error", "Algorithm is not available."))
-        return False
-
-    return True
+    if args[1] in db_algo.keys(): algo = Algorithm(_id= args[1])
+    else:
+        if args[1] not in db_algo.inv.keys():
+            await msg.reply(embed = denied_msg("Error", "Algorithm is not available."))
+            return False
+        else: algo = Algorithm(algo= args[1])
+  
+    return [algo, args[0]]
 
 async def execute(msg, args, client):
     try:
-        if not await check_args(msg, args): return
+        args = await check_args(msg, args)
+        if args == False: return
 
-        if db_algo.add_mapping(args[1], args[0]):
+        if args[0].map_to(args[1]):
             await msg.channel.send(embed = granted_msg("Mapping Added Successfully"))
         else:
             elog("Adding Mapping " + args[0] + " to algo " + args[1], inspect.stack()) 
