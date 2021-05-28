@@ -11,13 +11,13 @@ class Algorithm():
     algo = str()
     lang, is_zip = str(), bool()
     lang_zip = list()
-    code = list()
-    output_path = file_path = config['module_cmds_loc'] + "/algo/" + config['temp_file']
+    code = str()
+    output_path = config['module_cmds_loc'] + "/algo/" + config['temp_file']
     
     def __init__(self, 
         _id= str(), 
         str_algo= str(),
-        algo= str(), lang= str(), code= list(), is_zip= bool()
+        algo= str(), lang= str(), code= str(), is_zip= bool()
     ):
         if len(_id) != 0:
             mp = db_algo.get(_id)
@@ -63,6 +63,7 @@ class Algorithm():
         return db_algo.is_valid_mapping(self, keyword)
 
     def get_langs(self):
+        if len(self._id) == 0: return []
         return db_algo.get_langs(self)
 
     def get_code_path(self):
@@ -76,3 +77,17 @@ class Algorithm():
             file_path = config['module_cmds_loc'] + "/algo/code.txt"
             with open(file_path, 'w') as f: f.write(code)
         return file_path
+
+    async def write_file(self, attts):
+        extension = attts.filename.split(".")[-1]
+
+        if extension == 'zip': file_path = self.output_path + ".zip"
+        else: file_path = self.output_path + ".txt"
+        await attts.save(file_path)
+
+
+        algo = Algorithm()
+        return extension
+
+    def commit(self):
+        pass

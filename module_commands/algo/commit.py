@@ -3,6 +3,7 @@ from helper.User import User
 from helper.cEmbed import granted_msg, denied_msg
 from helper.GitHub import GitHub
 from helper.cLog import elog
+from helper.Algorithm import Algorithm
 from cDatabase.DB_Algorithm import DB_Algorithm
 
 config = json.load(open('config.json', 'r'))
@@ -19,11 +20,21 @@ def is_admin_only(): return True
 
 # ------------------ [ usage() ] ------------------ #
     # Returns how the command is called ex. "[prefix][command]"
-def usage(): return  file + " [algorithm] [language] [code]"
+def usage(): return  file + " [algorithm] ([code] OR [file_attachment])"
 
 # ------------------ [ description() ] ------------------ #
     # Returns a short explanation of what the function does
-def description(): return "Creates a new file in the repository."
+def description(): 
+    return (
+        "Creates a new file in the repository.\n" +
+        "```" + file + " [algorithm] [code]\n" +
+        file + " [algorithm] [file_attachment]```\n" +
+        "Notes: \n```\n" +
+        "`[code]` format: '''[lang]\\n [code] \\n'''\n" + 
+        "`[file_attachment]` name format:\n" + 
+        "   .zip: [algo]__[lang].zip            \n" +
+        "   .cpp, .java, .py: [algo].[lang]     \n```"
+    )
 
 # ------------------ [ check_args() ] ------------------ #
     # Checks if the command called by the user is valid
@@ -34,55 +45,66 @@ async def check_args(msg, args):
         await msg.reply(embed = denied_msg("Admin Command", description))
         return False
 
+    flag = (len(msg.attachments) == 0 and len(args) == 4 and len(args[0].split()) == 3)
+    flag = flag or (len(msg.attachments) == 1 and len(args) == 1 and len(args[0].split()) == 3)
 
-    if ((len(msg.attachments) == 0 and (len(args) < 4 or len(args[0].split()) != 4))
-        or (len(msg.attachments) == 1 and (len(args) != 1 or len(args[0].split()) != 4))):
+    if not flag:
         await msg.reply(embed = denied_msg("Invalid Command Format", usage()))
         return False
 
-    if len(msg.attachments) != 0: 
-        file_path = config['module_cmds_loc'] + "/algo/code.txt"
-        await msg.attachments[0].save(file_path)
-        
-        fs = open(file_path, "r")
-        code = fs.read()
-        fs.close()
-        fs = open(file_path, "w")
-        fs.write("") 
-        fs.close()
+    if len(msg.attachments) == 1: 
+        algo = args[0].split()[-1]
+        filename = msg.attachments[0].filename.split('.')
+        extension = filename[-1]
 
-        language = msg.attachments[0].filename.split(".")[-1]
-        args = args[0].split()[2:] + [language, code]
+        if extension == 'zip':
+            if len(filename) != 2 or len(filename[0].split("__")) != 2:
+                await msg.reply(embed= denied_msg("Invalid File Name"))
+                return
+            file_path = config['module_cmds_loc'] + "/algo/code.zip"
+            await msg.attachments[0].save(file_path)
+            filename = filename[0].split("__")
+            algo = Algorithm(algo= filename[0], lang= filename[1], is_zip= True)
+        else:
+            if len(filename) != 2:
+                await msg.reply(embed= denied_msg("Invalid File Name"))
+                return
+
+            file_path = config['module_cmds_loc'] + "/algo/code.txt"
+            await msg.attachments[0].save(file_path)
+
+            with open(file_path, 'r') as f: code = f.read()
+
+            algo = Algorithm(algo= filename[0], lang= extension, code= code, is_zip= False)
     else: 
-        args = args[0].split()[2:] + [args[1].strip('`')] + ['\n'.join(args[2 : -1])]
+        algo = args[0].split()[-1]
+        lang = args[1].strip('`')
+        code = '\n'.join(args[2 : -1])
+        algo = Algorithm(algo= algo, lang= lang, code= code, is_zip= False)
 
-    algorithm, language, code_language, code = args[0], args[1], args[2], args[3]
-
-    if language not in ['cpp', 'java', 'py']:
+    if algo.lang not in ['cpp', 'java', 'py']:
         await msg.reply(embed = denied_msg("Invalid Language", "Try one of `cpp`, `java`, `py`"))
         return False
 
-    if language != code_language:
-        await msg.reply(embed = denied_msg("Invalid Code Spinnet", ""))
-        return False
-
-    if db_algo.find_algo(algorithm, language):
+    if algo.is_found():
         await msg.reply(embed = denied_msg("Error", "Algorithm already exists in this language"))
         return False
 
-    return args
+    return algo
 
 async def execute(msg, args, client):
     try:
-        args = await check_args(msg, args)
-        if args == False: return
+        algo = await check_args(msg, args)
+        if algo == False: return
 
-        db_algo.add_algo(args[0], args[1])
+        print(algo)
 
-        filename = args[0] + '.' + args[1]
-        code = args[3]
+        algo.add()
+        algo.commit()
 
-        result = github_api.add_file(filename, code)
+
+        # check for zip upload
+        result = github_api.add_file(str(algo), code)
 
         if result == True:
             await msg.channel.send(embed = granted_msg("Algorithm Added Succesfully", filename))
