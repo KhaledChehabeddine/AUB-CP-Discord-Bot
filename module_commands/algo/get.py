@@ -32,16 +32,11 @@ async def check_args(msg, args):
         await msg.reply(embed = denied_msg("Invalid Command Format", usage()))
         return False
 
-    if args[0] in db_algo.keys(): algo = Algorithm(_id= args[0])
-    else:
-        if args[0] not in db_algo.inv.keys():
-            await msg.reply(embed = denied_msg("Error", "Algorithm is not available."))
-            return False
-        else: algo = Algorithm(algo= args[0])
+    lang = ('cpp' if len(args) == 1 else args[1])
 
-    if len(args) == 1: algo.lang = "cpp"
-    else: algo.lang = args[1]
-
+    if args[0] in db_algo.keys(): algo = Algorithm(_id= args[0], lang= lang)
+    else: algo = Algorithm(algo= args[0], lang= lang)
+    
     if not algo.is_found():
         await msg.reply(embed = denied_msg("Error", "Algorithm is not available yet."))
         return False
@@ -53,20 +48,9 @@ async def execute(msg, args, client):
         algo = await check_args(msg, args)
         if algo == False : return
 
-        # check the case where the file is a zip file
-
-        code = github_api.get_file(str(algo))
-        file_path = config['module_cmds_loc'] + "/algo/code.txt"
-
-        fs = open(file_path, "w")
-        fs.write(code) 
-        fs.close()
-
+        await msg.channel.send("Loading `" + str(algo) + "` . . .")
+        file_path = algo.get_code_path()
         await msg.channel.send(file= discord.File(file_path, str(algo)))
-
-        fs = open(file_path, "w")
-        fs.write("") 
-        fs.close()
     
     except Exception as ex:
         elog(ex, inspect.stack()) 

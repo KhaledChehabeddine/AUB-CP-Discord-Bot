@@ -155,5 +155,5 @@ async def my_background_task__Role_Management():
 
 # Initialize db_setting on_guild_join
 
-client.loop.create_task(my_background_task__Role_Management())
+#client.loop.create_task(my_background_task__Role_Management())
 client.run(config['Discord_Token'])

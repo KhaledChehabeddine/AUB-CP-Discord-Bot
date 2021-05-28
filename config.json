@@ -1,6 +1,6 @@
 {
     "default_prefix": ">",
-	  "Discord_Token": "ODA5NzYyMTgxMDI5NjkxMzky.YCZzzA.kqbCgSypSh_QERmf9Jjf1cElRRo",
+    "Discord_Token": "ODA5NzYyMTgxMDI5NjkxMzky.YCZzzA.kqbCgSypSh_QERmf9Jjf1cElRRo",
     "GitHub_Token": "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",
     "general_channel": 818816445789110282,
     "guild_id": 807204805890015254,
@@ -10,5 +10,6 @@
     "cmds_loc": "./commands",
     "module_cmds_loc": "./module_commands",
     "default_active_tag": "everyone",
-    "confirmation_key": "CONFIRM"
+    "confirmation_key": "CONFIRM",
+    "temp_file": "code"
 }

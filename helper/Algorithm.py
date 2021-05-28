@@ -1,6 +1,10 @@
 from cDatabase.DB_Algorithm import DB_Algorithm
+from helper.GitHub import GitHub
+import requests, json
 
+github_api = GitHub()
 db_algo = DB_Algorithm(('db_algorithms'))
+config = json.load(open('config.json', 'r'))
 
 class Algorithm():
     _id = str()
@@ -8,6 +12,7 @@ class Algorithm():
     lang, is_zip = str(), bool()
     lang_zip = list()
     code = list()
+    output_path = file_path = config['module_cmds_loc'] + "/algo/" + config['temp_file']
     
     def __init__(self, 
         _id= str(), 
@@ -19,16 +24,18 @@ class Algorithm():
             self._id = _id
             self.algo, self.lang_zip = mp['algo'], sorted(list(mp['lang_zip'].items()))
             self.lang = lang
+            if self.lang in self.get_langs(): self.is_zip = db_algo.db[self._id]['lang_zip'][self.lang]
         elif len(str_algo) != 0:
             args = str_algo.split('.')
             if args[-1] == 'zip': args, self.is_zip = args[0].split("__"), True
-            self.algo, self.lang = args[0], args[1]
+            self.algo, self.lang = args[0].lower(), args[1].lower()
             if self.algo in db_algo.inv.keys(): self._id = db_algo.get_id_of_algo(self.algo)
         else:
             self.algo, self.lang = algo.lower(), lang.lower()
             self.code, self.is_zip = code, is_zip
 
             if self.algo in db_algo.inv.keys(): self._id = db_algo.get_id_of_algo(self.algo)
+            if self.lang in self.get_langs(): self.is_zip = db_algo.db[self._id]['lang_zip'][self.lang]
 
     def __str__(self):
         if self.is_zip: return self.algo + "__" + self.lang + ".zip"
@@ -58,4 +65,14 @@ class Algorithm():
     def get_langs(self):
         return db_algo.get_langs(self)
 
-
+    def get_code_path(self):
+        if self.is_zip:
+            file_path = self.output_path + ".zip"
+            url = github_api.get_zip(str(self))
+            r = requests.get(url)
+            with open(file_path, 'wb') as f: f.write(r.content)
+        else:
+            code = github_api.get_file(str(self))
+            file_path = config['module_cmds_loc'] + "/algo/code.txt"
+            with open(file_path, 'w') as f: f.write(code)
+        return file_path

@@ -5,6 +5,7 @@ config = json.load(open('config.json', 'r'))
 
 class GitHub():
     path = "https://raw.githubusercontent.com/"
+    zip_path = "https://github.com/"
     username = str()
     repository = str()
     branch = str()
@@ -14,6 +15,7 @@ class GitHub():
     def __init__(self, username = 'mrm-36', repository = 'Algorithms', branch = 'main'):
         self.username, self.repository, self.branch = username, repository, branch
         self.path += username + "/" + repository + "/" + branch + "/"
+        self.zip_path += username + "/" + repository + "/raw/" + branch + "/"
 
     def init_api(self):
         if self.GitHub_Client == None: self.GitHub_Client = Github(config['GitHub_Token'])
@@ -56,3 +58,6 @@ class GitHub():
             self.GitHub_Repo.delete_file(contents.path, "API Deleted " + filename, contents.sha, branch= self.branch)
         except Exception as ex:
             return ex
+
+    def get_zip(self, filename):
+        return self.path + filename
