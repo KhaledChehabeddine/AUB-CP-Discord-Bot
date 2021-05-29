@@ -42,9 +42,6 @@ async def check_args(msg, args):
     if args[0] in db_algo.keys(): algo = Algorithm(_id= args[0], lang= args[1])
     else: algo = Algorithm(algo= args[0], lang= args[1])
 
-    print(algo)
-    return False
-
     if args[2] != config['confirmation_key']:
         await msg.reply(embed = denied_msg("Invalid Confirmation Key", ""))
         return False

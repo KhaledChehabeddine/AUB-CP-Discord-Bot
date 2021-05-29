@@ -45,7 +45,7 @@ async def check_args(msg, args):
         await msg.reply(embed = denied_msg("Admin Command", description))
         return False
 
-    flag = (len(msg.attachments) == 0 and len(args) == 4 and len(args[0].split()) == 3)
+    flag = (len(msg.attachments) == 0 and len(args) >= 4 and len(args[0].split()) == 3)
     flag = flag or (len(msg.attachments) == 1 and len(args) == 1 and len(args[0].split()) == 3)
 
     if not flag:
@@ -59,16 +59,16 @@ async def check_args(msg, args):
 
         if extension == 'zip':
             if len(filename) != 2 or len(filename[0].split("__")) != 2:
-                await msg.reply(embed= denied_msg("Invalid File Name"))
-                return
+                await msg.reply(embed= denied_msg("Invalid File Name", ""))
+                return False
             file_path = config['module_cmds_loc'] + "/algo/code.zip"
             await msg.attachments[0].save(file_path)
             filename = filename[0].split("__")
             algo = Algorithm(algo= filename[0], lang= filename[1], is_zip= True)
         else:
             if len(filename) != 2:
-                await msg.reply(embed= denied_msg("Invalid File Name"))
-                return
+                await msg.reply(embed= denied_msg("Invalid File Name", ""))
+                return False
 
             file_path = config['module_cmds_loc'] + "/algo/code.txt"
             await msg.attachments[0].save(file_path)
@@ -80,6 +80,8 @@ async def check_args(msg, args):
         algo = args[0].split()[-1]
         lang = args[1].strip('`')
         code = '\n'.join(args[2 : -1])
+        file_path = config['module_cmds_loc'] + "/algo/code.txt"
+        with open(file_path, 'w') as f: f.write(code)
         algo = Algorithm(algo= algo, lang= lang, code= code, is_zip= False)
 
     if algo.lang not in ['cpp', 'java', 'py']:
@@ -97,20 +99,16 @@ async def execute(msg, args, client):
         algo = await check_args(msg, args)
         if algo == False: return
 
-        print(algo)
-
-        algo.add()
-        algo.commit()
-
-
-        # check for zip upload
-        result = github_api.add_file(str(algo), code)
+        result = algo.commit()
 
         if result == True:
-            await msg.channel.send(embed = granted_msg("Algorithm Added Succesfully", filename))
+            algo.add()
+            await msg.channel.send(embed = granted_msg("Algorithm Added Succesfully", str(algo)))
         else:
             elog(result, inspect.stack()) 
-            await msg.reply(embed = denied_msg())
+            desc = "We faced an error while uploading the file.\n"
+            desc += "Consider trying again in a couple of minutes."
+            await msg.reply(embed = denied_msg("Error", desc))
     
     except Exception as ex:
         elog(ex, inspect.stack()) 

@@ -74,8 +74,9 @@ class Algorithm():
             with open(file_path, 'wb') as f: f.write(r.content)
         else:
             code = github_api.get_file(str(self))
-            file_path = config['module_cmds_loc'] + "/algo/code.txt"
-            with open(file_path, 'w') as f: f.write(code)
+            file_path = self.output_path + ".txt"
+            with open(file_path, 'w') as f: 
+                for line in code.split('\n'): f.write(line)
         return file_path
 
     async def write_file(self, attts):
@@ -90,7 +91,9 @@ class Algorithm():
         return extension
 
     def commit(self):
-        pass
+        file_path = self.output_path + (".zip" if self.is_zip else ".txt")
+        with open(file_path, 'rb') as f: code = f.read()
+        return github_api.add_file(str(self), code)
 
     def all(self):
         lst = []
