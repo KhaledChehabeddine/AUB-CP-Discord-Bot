@@ -68,7 +68,7 @@ async def execute(msg, args, client):
         str_algorithms, str_languages, str_ids = str(), str(), str()
         lst_algorithms, lst_languages, lst_ids = list(), list(), list()
 
-        arr = sorted(db_algo.inv.items(), key= lambda x : x[1])
+        arr = sorted(db_algo.inv.items(), key= lambda x : x[0])
         for i in range(len(arr)):
             if i != 0 and i % 15 == 0:
                 lst_algorithms.append(str_algorithms)

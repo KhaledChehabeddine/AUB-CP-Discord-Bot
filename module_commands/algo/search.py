@@ -75,7 +75,7 @@ async def execute(msg, args, client):
         str_algorithms, str_languages, str_ids = str(), str(), str()
         lst_algorithms, lst_languages, lst_ids = list(), list(), list()
 
-        arr = sorted(db_algo.inv.items(), key= lambda x : x[1])
+        arr = sorted(db_algo.inv.items(), key= lambda x : x[0])
         i = 0
         for (name, _id) in arr:
             if i != 0 and i % 15 == 0:
@@ -84,7 +84,7 @@ async def execute(msg, args, client):
                 lst_ids.append(str_ids)
                 str_algorithms = str_languages = str_ids = ""
             
-            algo = Algorithm(_id= arr[i][1])
+            algo = Algorithm(_id= _id)
 
             if language != None and language not in algo.get_langs(): continue
             if not algo.is_valid_mapping(keyword): continue
