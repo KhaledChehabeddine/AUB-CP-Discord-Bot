@@ -3,7 +3,7 @@ from helper.GitHub import GitHub
 import requests, json
 
 github_api = GitHub()
-db_algo = DB_Algorithm(('db_algorithms'))
+db_algo = DB_Algorithm('db_algorithms')
 config = json.load(open('config.json', 'r'))
 
 class Algorithm():
@@ -13,7 +13,7 @@ class Algorithm():
     lang_zip = list()
     code = str()
     output_path = config['module_cmds_loc'] + "/algo/" + config['temp_file']
-    
+ 
     def __init__(self, 
         _id= str(), 
         str_algo= str(),
@@ -43,7 +43,7 @@ class Algorithm():
 
     def is_found(self):
         if len(self._id) == 0: return False
-        return self.lang in db_algo.get_langs(self)
+        return self.lang in self.get_langs()
 
     def add(self):
         if self.is_found(): return False
@@ -91,3 +91,12 @@ class Algorithm():
 
     def commit(self):
         pass
+
+    def all(self):
+        lst = []
+        for (_id, full) in db_algo.items():
+            algo = Algorithm(algo= full['algo'])
+            for (lang, zp) in full['lang_zip'].items():
+                algo.lang, algo.is_zip = lang, zp
+                lst.append(str(algo))
+        return lst 

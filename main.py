@@ -44,6 +44,10 @@ def init_available_modules():
 
 def init_available_algorithms():
     algo_lst = github_api.get_all_files()
+    algo_all = Algorithm().all()
+    for algo in algo_all:
+        if algo in algo_lst: continue
+        Algorithm(str_algo= algo).delete()
     for algo in algo_lst: 
         x = Algorithm(str_algo= algo)
         if x.lang not in ['cpp', 'java', 'py']: continue

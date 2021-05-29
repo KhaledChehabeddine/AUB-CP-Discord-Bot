@@ -66,6 +66,7 @@ class DB_Algorithm(KV_Database):
         if len(self.db[algo._id]['lang_zip']) == 0:
             del(self.db[algo._id])
             del(self.inv[algo.algo])
+            if algo._id in self.mp.keys(): del(self.mp[algo._id])
 
         self.save()
         return True
@@ -95,7 +96,3 @@ class DB_Algorithm(KV_Database):
         for alias in self.get_mappings(algo):
             if keyword in alias: return True
         return False
-
-    def clear(self):
-        self.db = self.mp = self.inv = {}
-        self.save()
