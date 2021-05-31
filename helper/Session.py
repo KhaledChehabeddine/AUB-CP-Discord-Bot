@@ -12,10 +12,10 @@ class Session:
     def __init__(self, date = "", duration = "", topic = "", host = "", desc = "", _id = -1):
         if _id == -1:
             description = desc.split(" ")
-            description = ["\"" + x + "\"" for x in description]
+            description = description if "\"" == description[0][0] else ["\"" + x + "\"" for x in description]
             self._date = date
             self.duration = duration
-            self.topic = "[" + topic + "]"
+            self.topic = topic if "[" == topic[0] else ("[" + topic + "]")
             self.host = host
             self.desc = "\n".join(description)
             self._id = len(database_session.db) + 1
