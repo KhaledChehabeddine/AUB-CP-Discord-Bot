@@ -1,3 +1,3 @@
-DataBase = {'bfs': ['cpp'], 'binary-search-tree': ['cpp', 'java'], 'closest-pair': ['cpp'], 'dfs': ['cpp'], 'doubly-linked-list': ['java'], 'dsu': ['cpp'], 'heap-priority-queue': ['java'], 'linked-binary-tree': ['java'], 'priority-queue': ['java'], 'singly-linked-list': ['java']}
+DataBase = {'bfs': ['cpp'], 'binary-search-tree': ['cpp', 'java'], 'closest-pair': ['cpp'], 'dfs': ['cpp'], 'doubly-linked-list': ['java'], 'dsu': ['cpp'], 'heap-priority-queue': ['java'], 'linked-binary-tree': ['java'], 'priority-queue': ['java'], 'singly-linked-list': ['java'], 'breadth-first-search': ['cpp'], 'depth-first-search': ['cpp'], 'disjoint-set-union': ['cpp'], 'big-int': ['cpp'], 'gcd-lcm': ['cpp'], 'miller-rabin': ['cpp'], 'mod-pow': ['cpp'], 'sieve-divisors': ['cpp'], 'sieve-primes': ['cpp']}
 
 Mapping = {'binary-search-tree': ['bst']}

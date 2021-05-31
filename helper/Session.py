@@ -9,7 +9,7 @@ class Session:
     _date = MyDate()
     _id, duration, topic, desc, host = int(), int(), str(), str(), str()
 
-    def __init__(self, date, duration, topic, host, desc = "", _id = -1):
+    def __init__(self, date = "", duration = "", topic = "", host = "", desc = "", _id = -1):
         if _id == -1:
             description = desc.split(" ")
             description = ["\"" + x + "\"" for x in description]
@@ -18,6 +18,7 @@ class Session:
             self.topic = "[" + topic + "]"
             self.host = host
             self.desc = "\n".join(description)
+            self._id = len(database_session.db) + 1
         else:
             self._id = _id
             self.fill_values()
@@ -25,8 +26,6 @@ class Session:
     def create(self): database_session.create(self)
 
     def delete(self): database_session.delete(self)
-
-    def change(self, session): database_session.change(self, session)
 
     def fill_values(self):
         info = database_session.get(self._id)
@@ -44,5 +43,7 @@ class Session:
                 and session['host'] == self.host
                 and session['desc'] == self.desc): return True
         return False
+
+    def change(self, other): database_session.change(self, other)
 
     def __str__(self): return "ACM Session: " + self.topic + " | " + str(self.date)

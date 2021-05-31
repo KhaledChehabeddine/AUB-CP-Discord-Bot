@@ -1,1 +1,1 @@
-05/12/2021 at 14:28 GitHub/KFC-Bot/commands/session.py CALL execute() ERROR-MSG 'str' object has no attribute 'month'
+05/30/2021 at 15:36 GitHub/KFC-Bot/module_commands/session/change.py CALL execute() ERROR-MSG 'str' object is not callable
