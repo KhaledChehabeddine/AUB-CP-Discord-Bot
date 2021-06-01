@@ -42,6 +42,10 @@ class KV_Database:
         # Returns the value associated with the given key
     def get(self, key): return self.db[key]
 
+    # ------------------ [ delete_key() ] ------------------ # 
+        # Deletes the given key from the database
+    def delete_key(self, key): del(self.db[key])
+
     # ------------------ [ keys() ] ------------------ # 
         # Returns a list of all the keys in the database
     def keys(self): return list(self.db.keys())
@@ -66,3 +70,7 @@ class KV_Database:
         file.write("DataBase = ")
         file.write(str(self.db))
         file.close()
+
+    def clear(self):
+        self.db = {}
+        self.save()

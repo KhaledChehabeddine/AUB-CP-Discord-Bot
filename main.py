@@ -7,18 +7,51 @@ import os, json, inspect, discord, asyncio, importlib
 from helper.cLog import elog
 from helper.cEmbed import denied_msg
 from helper.User import User
+from helper.Algorithm import Algorithm
 from cDatabase.DB_Users import DB_Users
+from helper.GitHub import GitHub
 from helper.CF_API import CF_API
+from cDatabase.DB_Algorithm import DB_Algorithm
+from cDatabase.DB_Settings import DB_Settings
 
 config = json.load(open('config.json', 'r'))
-prefix = config['prefix']
 
 client = discord.Client(intents= discord.Intents.all())
 
 available_commands = dict()
 available_modules = dict() # dict of dicts
 db_users = DB_Users('db_users')
+db_algo = DB_Algorithm('db_algorithms')
+db_settings = DB_Settings('db_settings')
 cf_api = CF_API()
+github_api = GitHub()
+
+
+def init_available_commands():
+    for (t1, t2, folder) in os.walk(config['cmds_loc']):
+        for item in folder:
+            if item[-3:] != '.py': continue
+            available_commands[item[:-3]] = importlib.import_module(config['cmds_loc'][2:] + '.' + item[:-3])
+
+def init_available_modules():
+    for (path, general_folder, folder) in os.walk(config['module_cmds_loc']):
+        for inner_folder in general_folder: available_modules[inner_folder] = {}
+        current_folder = path.split(config["split_path"])[-1]
+        for item in folder:
+            if item[-3:] != ".py": continue
+            file_path = config['module_cmds_loc'][2:] + "." + current_folder + "." + item[:-3]
+            available_modules[current_folder][item[:-3]] = importlib.import_module(file_path)
+
+def init_available_algorithms():
+    algo_lst = github_api.get_all_files()
+    algo_all = Algorithm().all()
+    for algo in algo_all:
+        if algo in algo_lst: continue
+        Algorithm(str_algo= algo).delete()
+    for algo in algo_lst: 
+        x = Algorithm(str_algo= algo)
+        if x.lang not in ['cpp', 'java', 'py']: continue
+        x.add()
 
 # ------------------ [ init() ] ------------------ #
     # Iterates over names in "folder" file of "config["cmds_loc"]"
@@ -27,18 +60,9 @@ cf_api = CF_API()
     # Throws an exception if any error occurs while running, logged using "elog()" function
 def init():
     try:
-        for (t1, t2, folder) in os.walk(config['cmds_loc']):
-            for item in folder:
-                if item[-3:] != '.py': continue
-                available_commands[item[:-3]] = importlib.import_module(config['cmds_loc'][2:] + '.' + item[:-3])
-
-        for (path, general_folder, folder) in os.walk(config['module_cmds_loc']):
-            for inner_folder in general_folder: available_modules[inner_folder] = {}
-            current_folder = path.split(config["split_path"])[-1]
-            for item in folder:
-                if item[-3:] != ".py": continue
-                file_path = config['module_cmds_loc'][2:] + "." + current_folder + "." + item[:-3]
-                available_modules[current_folder][item[:-3]] = importlib.import_module(file_path)
+        init_available_commands()
+        init_available_modules()
+        init_available_algorithms()
     except Exception as ex: elog(ex, inspect.stack())
 
 # ------------------ [ on_ready() ] ------------------ #
@@ -48,7 +72,7 @@ def init():
 @client.event
 async def on_ready(): 
     init()
-    await client.change_presence(activity = discord.Game(prefix + "help"))
+    await client.change_presence(activity = discord.Game(config['default_prefix'] + "help"))
     #await client.change_presence(status = discord.Status.offline)
     print("Bot online.")
 
@@ -61,6 +85,8 @@ async def on_ready():
 @client.event
 async def on_message(msg):
     try:
+        prefix = db_settings.get_prefix(msg.guild)
+
         if msg.content[:len(prefix)] != prefix or msg.author.bot: return
         args = msg.content[len(prefix):].split()
 
@@ -84,6 +110,7 @@ async def on_message(msg):
             command = args[1]
             if not command in available_modules[module].keys(): return
             if command in ["help", "admin-help"]: await available_modules[module][command].execute(msg, args[2:], client, module)
+            elif command in ["commit"]: await available_modules[module][command].execute(msg, msg.content[len(prefix):].split('\n'), client)
             else: await available_modules[module][command].execute(msg, args[2:], client)
 
     except Exception as ex:
@@ -130,5 +157,7 @@ async def my_background_task__Role_Management():
             await user.update_roles()
         await asyncio.sleep(3 * 60 * 60)
 
-client.loop.create_task(my_background_task__Role_Management())
-client.run(config['token'])
+# Initialize db_setting on_guild_join
+
+#client.loop.create_task(my_background_task__Role_Management())
+client.run(config['Discord_Token'])

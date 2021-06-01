@@ -1,12 +1,15 @@
 import os, importlib, json, inspect
 from helper.cEmbed import granted_msg, denied_msg
 from helper.cLog import elog
+from cDatabase.DB_Settings import DB_Settings
 
 config = json.load(open('config.json', 'r'))
-prefix = config['prefix']
+
 path = __file__.split(config['split_path'])
 file = path[len(path) - 1][:-3]
 available_commands = dict()
+
+db_settings = DB_Settings('db_settings')
 
 # ------------------ [ is_admin_only() ] ------------------ #
     # Admins only
@@ -14,11 +17,11 @@ def is_admin_only(): return True
 
 # ------------------ [ usage() ] ------------------ #
     # Returns how the command is called ex. "[prefix][command]"
-def usage(parent_file): return prefix + parent_file + " " + file
+def usage(parent_file): return parent_file + " " + file
 
 # ------------------ [ description() ] ------------------ #
     # Returns a short explanation of what the function does
-def description(parent_file): return "Displays info about " + parent_file + " commands provided by the bot."
+def description(parent_file): return "```fix\nDisplays available " + parent_file + " commands of the bot.```"
 
 # ------------------ [ init() ] ------------------ #
     # Iterates over names in "folder" file of "config["cmds_loc"]"
@@ -40,13 +43,13 @@ def init(parent_file):
 async def execute(msg, args, client, parent_file):
     try:
         if len(available_commands) == 0: init(parent_file)     
-
+        prefix = db_settings.get_prefix(msg.guild)
         response = granted_msg("Bot Commands")
         for cmd in available_commands:
             if not available_commands[cmd].is_admin_only(): continue
             if cmd == "admin-help":
                 response.add_field(
-                    name = available_commands[cmd].usage(parent_file), 
+                    name = prefix + available_commands[cmd].usage(parent_file), 
                     value = available_commands[cmd].description(parent_file), 
                     inline = False
                 )

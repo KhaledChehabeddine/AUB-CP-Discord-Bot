@@ -3,7 +3,7 @@ from helper.cLog import elog
 from helper.cEmbed import granted_msg, denied_msg
 
 config = json.load(open('config.json', 'r'))
-prefix = config['prefix']
+
 path = __file__.split(config['split_path'])
 file = path[len(path) - 1][:-3]
 
@@ -13,7 +13,7 @@ def is_admin_only(): return False
 
 # ------------------ [ usage() ] ------------------ #
     # Returns how the command is called ex. "[prefix][command]"
-def usage(): return prefix + file
+def usage(): return file
 
 # ------------------ [ description() ] ------------------ #
     # Returns a short explanation of what the function does

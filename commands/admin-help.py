@@ -2,13 +2,17 @@ import os, importlib, json, inspect
 from helper.cLog import elog
 from helper.cEmbed import granted_msg, denied_msg
 from helper.User import User
+from cDatabase.DB_Settings import DB_Settings
 
 config = json.load(open('config.json', 'r'))
-prefix = config['prefix']
+
 path = __file__.split(config['split_path'])
 file = path[len(path) - 1][:-3]
+
 available_commands = dict()
 available_modules = dict()
+
+db_settings = DB_Settings('db_settings')
 
 # ------------------ [ is_admin_only() ] ------------------ #
     # Limits this command to only admin users (i.e. Ahmad, Khaled, MB, Miguel)
@@ -16,7 +20,7 @@ def is_admin_only(): return True
 
 # ------------------ [ usage() ] ------------------ #
     # Returns how the command is called ex. "[prefix][command]"
-def usage(): return prefix + file
+def usage(): return file
 
 # ------------------ [ description() ] ------------------ #
     # Returns a short explanation of what the function does
@@ -58,6 +62,8 @@ async def execute(msg, args, client):
             await msg.reply(embed = denied_msg("Admin Command", desc))
             return
 
+        prefix = db_settings.get_prefix(msg.guild)
+
         response = granted_msg(" ")
 
         module_msg = ""
@@ -81,7 +87,7 @@ async def execute(msg, args, client):
         for cmd in available_commands:
             if not available_commands[cmd].is_admin_only(): continue
             response.add_field(
-                name = available_commands[cmd].usage(), 
+                name = prefix + available_commands[cmd].usage(), 
                 value = available_commands[cmd].description(), 
                 inline = False
             )
