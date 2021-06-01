@@ -1,1 +1,1 @@
-DataBase = {}
+DataBase = {1: {'date': '05/30/2021 17:30', 'duration': 2, 'topic': '[Ahmad]', 'host': 'KCH2002', 'desc': '"Palestine"'}, 2: {'date': '05/30/2021 17:30', 'duration': 2, 'topic': '[Ahmad]', 'host': 'KCH2002', 'desc': '"Israel2"'}}

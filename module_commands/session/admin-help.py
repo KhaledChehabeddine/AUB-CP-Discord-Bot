@@ -21,7 +21,7 @@ def usage(parent_file): return parent_file + " " + file
 
 # ------------------ [ description() ] ------------------ #
     # Returns a short explanation of what the function does
-def description(parent_file): return "Displays info about " + parent_file + " commands provided by the bot."
+def description(parent_file): return "```fix\nDisplays available " + parent_file + " commands of the bot.```"
 
 # ------------------ [ init() ] ------------------ #
     # Iterates over names in "folder" file of "config["cmds_loc"]"
