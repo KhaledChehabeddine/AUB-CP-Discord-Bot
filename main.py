@@ -63,7 +63,8 @@ def init():
         init_available_commands()
         init_available_modules()
         init_available_algorithms()
-    except Exception as ex: elog(ex, inspect.stack())
+    except Exception as ex: 
+        elog(ex, inspect.stack())
 
 # ------------------ [ on_ready() ] ------------------ #
     # Runs after running main.py
