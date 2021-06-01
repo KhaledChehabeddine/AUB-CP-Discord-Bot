@@ -1,1 +1,0 @@
-05/30/2021 at 15:36 GitHub/KFC-Bot/module_commands/session/change.py CALL execute() ERROR-MSG 'str' object is not callable
