@@ -75,6 +75,7 @@ class Algorithm():
         else:
             code = github_api.get_file(str(self))
             file_path = self.output_path + ".txt"
+            # adding extra "new-line" chars
             with open(file_path, 'w') as f: 
                 for line in code.split('\n'): f.write(line)
         return file_path
